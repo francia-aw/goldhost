@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoldHost - خطط سيرفرات ماينكرافت</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f172a; color: #fff; margin: 0; padding: 40px 20px; text-align: center; }
+        h1 { color: #f59e0b; font-size: 2.5rem; margin-bottom: 10px; }
+        p.subtitle { color: #94a3b8; font-size: 1.1rem; margin-bottom: 40px; }
+        .pricing-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .card { background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 25px; width: 280px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: transform 0.2s; }
+        .card:hover { transform: translateY(-5px); border-color: #f59e0b; }
+        .ram { font-size: 1.8rem; font-weight: bold; color: #38bdf8; }
+        .price { font-size: 2rem; color: #10b981; margin: 15px 0; }
+        .specs { list-style: none; padding: 0; color: #cbd5e1; margin-bottom: 20px; line-height: 1.8; }
+        .btn { background-color: #f59e0b; color: #000; border: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 1rem; width: 100%; }
+        .btn:hover { background-color: #d97706; }
+    </style>
+</head>
+<body>
+
+    <h1>🎮 GoldHost Minecraft Hosting</h1>
+    <p class="subtitle">اختر الخطة المناسبة لسيرفرك بأعلى أداء وأفضل سعر</p>
+
+    <div class="pricing-container">
+        
+        <!-- خطة 4GB -->
+        <div class="card">
+            <div class="ram">4 GB RAM</div>
+            <div class="price">$4 <small>/ شهرياً</small></div>
+            <ul class="specs">
+                <li>⚡ 2 vCPU Cores</li>
+                <li>🚀 NVMe SSD High Speed</li>
+                <li>🛡️ Anti-DDoS Protection</li>
+                <li>🔧 Pterodactyl Panel</li>
+            </ul>
+            <button class="btn" onclick="showAlert('4GB')">اشترك الآن</button>
+        </div>
+
+        <!-- خطة 8GB -->
+        <div class="card">
+            <div class="ram">8 GB RAM</div>
+            <div class="price">$8 <small>/ شهرياً</small></div>
+            <ul class="specs">
+                <li>⚡ 4 vCPU Cores</li>
+                <li>🚀 NVMe SSD High Speed</li>
+                <li>🛡️ Anti-DDoS Protection</li>
+                <li>🔧 Pterodactyl Panel</li>
+            </ul>
+            <button class="btn" onclick="showAlert('8GB')">اشترك الآن</button>
+        </div>
+
+        <!-- خطة 16GB -->
+        <div class="card">
+            <div class="ram">16 GB RAM</div>
+            <div class="price">$16 <small>/ شهرياً</small></div>
+            <ul class="specs">
+                <li>⚡ 8 vCPU Cores</li>
+                <li>🚀 NVMe SSD High Speed</li>
+                <li>🛡️ Anti-DDoS Protection</li>
+                <li>🔧 Pterodactyl Panel</li>
+            </ul>
+            <button class="btn" onclick="showAlert('16GB')">اشترك الآن</button>
+        </div>
+
+        <!-- خطة 36GB -->
+        <div class="card">
+            <div class="ram">36 GB RAM</div>
+            <div class="price">$36 <small>/ شهرياً</small></div>
+            <ul class="specs">
+                <li>⚡ 18 vCPU Cores</li>
+                <li>🚀 NVMe SSD High Speed</li>
+                <li>🛡️ Anti-DDoS Protection</li>
+                <li>🔧 Pterodactyl Panel</li>
+            </ul>
+            <button class="btn" onclick="showAlert('36GB')">اشترك الآن</button>
+        </div>
+
+    </div>
+
+    <script>
+        function showAlert(plan) {
+            alert("عذراً! خدمة الدفع وخطة (" + plan + ") تحت التعديل والصيانة حالياً. سننطلق قريباً جداً 🚀");
+        }
+    </script>
+
+</body>
+</html>
