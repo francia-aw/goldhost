@@ -36,13 +36,18 @@
         select option { background: #161722; color: #fff; padding: 10px; }
         textarea:focus, input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
         
+        /* التنسيق الجديد لصندوق الإعدادات المتقدمة (مقاس/عدد/مدة) */
+        .advanced-options { display: none; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 15px; border: 1px solid var(--glass-border); }
+        .option-group { flex: 1; min-width: 180px; }
+        .option-group label { color: var(--accent); font-weight: bold; margin-bottom: 8px; display: block; }
+        .option-group select { margin-bottom: 0; padding: 12px; }
+
         .action-btn { background: linear-gradient(45deg, var(--primary), var(--accent)); color: white; border: none; padding: 18px 30px; border-radius: 15px; font-size: 18px; font-weight: 900; cursor: pointer; width: 100%; transition: all 0.4s; box-shadow: 0 5px 20px rgba(0, 210, 255, 0.3); text-transform: uppercase; }
         .action-btn:hover:not(:disabled) { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 30px rgba(0, 210, 255, 0.5); letter-spacing: 1px; }
         .action-btn:disabled { background: #444; color: #888; cursor: not-allowed; box-shadow: none; transform: none; background-image: none;}
         
         #aiOutput { margin-top: 35px; padding: 30px; background: rgba(0, 0, 0, 0.6); border-radius: 20px; border: 1px solid var(--glass-border); min-height: 120px; line-height: 1.9; font-size: 18px; text-align: right; position: relative; overflow-wrap: break-word; white-space: pre-wrap; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);}
-        #aiOutput img { max-width: 100%; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--glass-border); display: block; margin: 0 auto;}
-        #aiOutput video { width: 100%; border-radius: 15px; box-shadow: 0 0 40px rgba(138, 43, 226, 0.4); border: 2px solid var(--primary); background: #000; }
+        #aiOutput img, #aiOutput video { border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); border: 1px solid var(--glass-border); display: block; margin: 0 auto; }
         
         .progress-container { background: rgba(0,0,0,0.7); padding: 25px; border-radius: 15px; border: 1px solid var(--accent); box-shadow: inset 0 0 20px rgba(0,0,0,0.8); text-align: center;}
         .progress-title { color: var(--accent); font-weight: 900; margin-bottom: 15px; font-size: 18px; text-shadow: 0 0 10px var(--accent-glow); }
@@ -82,43 +87,67 @@
         <div style="text-align: center; padding: 50px 0;">
             <i class="fa-brands fa-space-awesome" style="font-size: 110px; color: var(--accent); margin-bottom: 30px; text-shadow: 0 0 40px var(--accent-glow);"></i>
             <h1 style="font-size: 50px; margin-bottom: 20px; font-weight: 900;">مستقبلك يبدأ هنا</h1>
-            <p style="font-size: 22px; max-width: 650px; margin: 0 auto; color: #ccc;">سجل دخولك الان واستمتع بأقوى نماذج الذكاء الاصطناعي (النصوص، الصور، والفيديو).</p>
+            <p style="font-size: 22px; max-width: 650px; margin: 0 auto; color: #ccc;">سجل دخولك الان واستمتع بأقوى نماذج الذكاء الاصطناعي (النصوص، الصور، والفيديو) في الشرق الأوسط.</p>
         </div>
     </div>
 
+    <!-- الإستوديو -->
     <div id="aiPage" class="container page">
-        <h2><i class="fa-solid fa-clapperboard"></i> إستوديو الإنشاء</h2>
+        <h2><i class="fa-solid fa-clapperboard"></i> إستوديو الإنشاء الشامل</h2>
         
         <select id="modelSelector">
             <optgroup label="نصوص (شغالة 100%)">
                 <option value="gpt-4o" data-type="text" data-cost="50">GPT-4o (التكلفة: 50 نقطة)</option>
                 <option value="claude-3-5-sonnet" data-type="text" data-cost="100">Claude 3.5 Sonnet (التكلفة: 100 نقطة)</option>
             </optgroup>
-            <optgroup label="توليد الصور (جودة فائقة)">
-                <option value="grok-imagine/text-to-image" data-type="media" data-cost="150">Grok Imagine (التكلفة: 150 نقطة)</option>
-                <option value="flux" data-type="media" data-cost="120">Flux (التكلفة: 120 نقطة)</option>
-                <option value="midjourney" data-type="media" data-cost="200">Midjourney (التكلفة: 200 نقطة)</option>
+            <optgroup label="توليد الصور (مهام متطورة)">
+                <option value="grok-imagine/text-to-image" data-type="image" data-cost="150">Grok Imagine (التكلفة: 150 نقطة للصورة)</option>
+                <option value="flux" data-type="image" data-cost="120">Flux (التكلفة: 120 نقطة للصورة)</option>
+                <option value="midjourney" data-type="image" data-cost="200">Midjourney (التكلفة: 200 نقطة للصورة)</option>
             </optgroup>
             <optgroup label="توليد الفيديو السينمائي">
-                <option value="kling-video" data-type="media" data-cost="800">Kling Video (التكلفة: 800 نقطة)</option>
-                <option value="runway-gen3" data-type="media" data-cost="1000">Runway Gen-3 (التكلفة: 1000 نقطة)</option>
+                <option value="grok-video/generate" data-type="video" data-cost="600">Grok Video (التكلفة: 600 نقطة)</option>
+                <option value="kling-video" data-type="video" data-cost="800">Kling Video (التكلفة: 800 نقطة)</option>
+                <option value="runway-gen3" data-type="video" data-cost="1000">Runway Gen-3 (التكلفة: 1000 نقطة)</option>
             </optgroup>
         </select>
 
         <textarea id="aiInput" rows="5" placeholder="اكتب وصفك هنا بدقة... (ملاحظة: الصور والفيديو تتطلب وصفاً باللغة الإنجليزية لأفضل نتيجة)"></textarea>
         
-        <!-- اختيار المقاس الجديد للصور والفيديو -->
-        <div style="display: flex; gap: 15px; margin-bottom: 25px;">
-            <div style="flex: 1;">
-                <label style="color: var(--accent); font-weight: bold; margin-bottom: 10px; display: block;"><i class="fa-solid fa-crop-simple"></i> المقاس (للصور والفيديو):</label>
-                <select id="aspectRatioSelector" style="margin-bottom: 0;">
+        <!-- الإعدادات الذكية المتقدمة (تظهر وتختفي ديناميكياً) -->
+        <div id="advancedOptions" class="advanced-options">
+            
+            <!-- المقاس (يظهر للصور والفيديو) -->
+            <div id="aspectRatioDiv" class="option-group">
+                <label><i class="fa-solid fa-crop-simple"></i> المقاس (الأبعاد):</label>
+                <select id="aspectRatioSelector">
                     <option value="1:1">مربع (1:1) - إنستجرام</option>
-                    <option value="16:9">أفقي (16:9) - يوتيوب ولاب توب</option>
+                    <option value="16:9">أفقي (16:9) - يوتيوب</option>
                     <option value="9:16">رأسي (9:16) - تيك توك وريلز</option>
-                    <option value="3:2">أفقي عريض (3:2) - تصوير فوتوغرافي</option>
-                    <option value="2:3">رأسي طويل (2:3) - بورتريه</option>
+                    <option value="3:2">أفقي عريض (3:2) - تصوير</option>
                 </select>
             </div>
+            
+            <!-- عدد الصور (يظهر للصور فقط) -->
+            <div id="imageCountDiv" class="option-group">
+                <label><i class="fa-solid fa-images"></i> عايز كام صورة؟:</label>
+                <select id="imageCountSelector">
+                    <option value="1">1 صورة</option>
+                    <option value="2">2 صورتين</option>
+                    <option value="3">3 صور</option>
+                    <option value="4">4 صور</option>
+                </select>
+            </div>
+            
+            <!-- مدة الفيديو (يظهر للفيديو فقط) -->
+            <div id="videoDurationDiv" class="option-group">
+                <label><i class="fa-solid fa-stopwatch"></i> مدة الفيديو:</label>
+                <select id="videoDurationSelector">
+                    <option value="5">5 ثواني (قياسي)</option>
+                    <option value="10">10 ثواني (طويل)</option>
+                </select>
+            </div>
+            
         </div>
 
         <button id="submitBtn" class="action-btn" onclick="generateAI()">تنفيذ الطلب <i class="fa-solid fa-wand-sparkles" style="margin-right: 8px;"></i></button>
@@ -130,7 +159,7 @@
         </div>
     </div>
 
-    <!-- الأسعار والدفع -->
+    <!-- باقي الصفحات... -->
     <div id="pricingPage" class="container page">
         <h2 style="text-align: center; margin-bottom: 40px; font-weight: 900;">باقات الشحن</h2>
         <div class="plans-grid">
@@ -150,7 +179,6 @@
         </div>
     </div>
 
-    <!-- الإدارة -->
     <div id="adminPage" class="container page">
         <div id="adminLogin" style="text-align: center;">
             <i class="fa-solid fa-shield-dog" style="font-size: 70px; color: #ff5252; margin-bottom: 25px;"></i>
@@ -199,6 +227,33 @@
             document.getElementById(pageId).classList.add('active');
             event.currentTarget.classList.add('active-nav');
         }
+
+        // إظهار وإخفاء الخيارات ديناميكياً بناءً على الموديل
+        document.getElementById('modelSelector').addEventListener('change', function() {
+            const type = this.options[this.selectedIndex].getAttribute('data-type');
+            const advBox = document.getElementById('advancedOptions');
+            const imgCount = document.getElementById('imageCountDiv');
+            const vidDur = document.getElementById('videoDurationDiv');
+            const aspectDiv = document.getElementById('aspectRatioDiv');
+            
+            if (type === 'image') {
+                advBox.style.display = 'flex';
+                aspectDiv.style.display = 'block';
+                imgCount.style.display = 'block';
+                vidDur.style.display = 'none';
+            } else if (type === 'video') {
+                advBox.style.display = 'flex';
+                aspectDiv.style.display = 'block';
+                imgCount.style.display = 'none';
+                vidDur.style.display = 'block';
+            } else {
+                // نصوص (لا تحتاج مقاس أو عدد)
+                advBox.style.display = 'none';
+            }
+        });
+        
+        // تشغيل الوظيفة أول مرة عشان تظبط القوائم
+        document.getElementById('modelSelector').dispatchEvent(new Event('change'));
 
         document.getElementById('loginBtn').addEventListener('click', () => {
             signInWithPopup(auth, provider).catch(err => alert("خطأ: " + err.message));
@@ -270,14 +325,21 @@
             const selectedOption = selector.options[selector.selectedIndex];
             const modelId = selectedOption.value;
             const modelType = selectedOption.getAttribute('data-type'); 
-            const cost = parseInt(selectedOption.getAttribute('data-cost'));
+            const baseCost = parseInt(selectedOption.getAttribute('data-cost'));
             const promptText = document.getElementById('aiInput').value;
             
-            // قراءة المقاس الذي اختاره المستخدم
-            const aspectRatio = document.getElementById('aspectRatioSelector').value;
-
-            if (userPoints < cost) return alert("❌ رصيدك لا يكفي.");
             if (!promptText.trim()) return alert("⚠️ اكتب وصف للطلب.");
+
+            // حساب التكلفة النهائية بناءً على عدد الصور
+            let finalCost = baseCost;
+            let imageCount = 1;
+            
+            if (modelType === 'image') {
+                imageCount = parseInt(document.getElementById('imageCountSelector').value) || 1;
+                finalCost = baseCost * imageCount; // ضرب السعر في عدد الصور
+            }
+
+            if (userPoints < finalCost) return alert(`❌ رصيدك لا يكفي. تكلفة هذا الطلب: ${finalCost} نقطة.`);
 
             const btn = document.getElementById('submitBtn');
             const output = document.getElementById('aiOutput');
@@ -286,14 +348,14 @@
             btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> جاري الإنشاء...';
             
             // خصم النقاط مؤقتاً
-            userPoints -= cost;
+            userPoints -= finalCost;
             document.getElementById('ptsSpan').innerText = userPoints;
             await updateDoc(doc(db, "users", currentUser.uid), { points: userPoints });
 
             try {
-                // ================== مسار النصوص ==================
+                // ================== النصوص ==================
                 if (modelType === "text") {
-                    output.innerHTML = '<div style="text-align:center; padding: 20px;"><i class="fa-solid fa-atom fa-spin" style="font-size:50px; color:var(--primary); margin-bottom:15px;"></i><br><span style="color:var(--accent);">جاري المعالجة...</span></div>';
+                    output.innerHTML = '<div style="text-align:center; padding: 20px;"><i class="fa-solid fa-atom fa-spin" style="font-size:50px; color:var(--primary); margin-bottom:15px;"></i><br><span style="color:var(--accent);">الذكاء الاصطناعي يفكر...</span></div>';
                     
                     const endpoint = "https://api.kie.ai/v1/chat/completions";
                     const payload = { model: modelId, messages: [{ role: "user", content: promptText }] };
@@ -311,22 +373,33 @@
                     } else {
                         output.innerHTML = `<pre style="text-align:left; color:#0f0;">${JSON.stringify(data, null, 2)}</pre>`;
                     }
-
-                // ================== مسار المهام (الصور والفيديو) ==================
-                } else if (modelType === "media") {
                     
-                    output.innerHTML = `<div class="progress-container"><div class="progress-title"><i class="fa-solid fa-layer-group fa-bounce"></i> جاري إنشاء الميديا...</div><div class="progress-bar-bg"><div id="vidProgressFill" class="progress-bar-fill"></div></div><div id="vidProgressText" class="progress-text">0%</div></div>`;
+                    btn.disabled = false;
+                    btn.innerHTML = 'تنفيذ الطلب <i class="fa-solid fa-wand-sparkles" style="margin-right: 8px;"></i>';
+
+                // ================== الصور والفيديو الذكي ==================
+                } else if (modelType === "image" || modelType === "video") {
+                    
+                    output.innerHTML = `<div class="progress-container"><div class="progress-title"><i class="fa-solid fa-layer-group fa-bounce"></i> جاري الإنتاج...</div><div class="progress-bar-bg"><div id="vidProgressFill" class="progress-bar-fill"></div></div><div id="vidProgressText" class="progress-text">0%</div></div>`;
 
                     const createEndpoint = "https://api.kie.ai/api/v1/jobs/createTask";
                     
-                    // إضافة المقاس (Aspect Ratio) بداخل الـ input
                     const payload = { 
                         model: modelId, 
                         input: {
                             prompt: promptText,
-                            aspect_ratio: aspectRatio // إضافة المقاس المطلوب
+                            aspect_ratio: document.getElementById('aspectRatioSelector').value
                         }
                     };
+
+                    // لو صور نضيف عدد الصور (n)
+                    if (modelType === 'image') {
+                        payload.input.n = imageCount;
+                    }
+                    // لو فيديو نضيف المدة (duration)
+                    if (modelType === 'video') {
+                        payload.input.duration = parseInt(document.getElementById('videoDurationSelector').value);
+                    }
 
                     const startRes = await fetch(createEndpoint, {
                         method: "POST",
@@ -338,14 +411,17 @@
                     
                     const taskId = startData.data?.taskId || startData.taskId || startData.id;
                     
-                    if(!taskId) {
-                        throw new Error("لم يتم استلام رقم المهمة (Task ID) من السيرفر. " + JSON.stringify(startData));
-                    }
+                    if(!taskId) throw new Error("لم يتم استلام رقم المهمة (Task ID). " + JSON.stringify(startData));
 
-                    // نظام الكشف المستمر (Polling) عن حالة المهمة
+                    // الكشف المستمر (Polling) وتفادي التعليق
                     let fakeProgress = 0;
+                    let pollCount = 0;
+                    
                     const checkStatus = async () => {
                         try {
+                            pollCount++;
+                            if(pollCount > 60) throw new Error("نفذ وقت الانتظار. السيرفر تأخر جداً في الرد."); // حماية من التعليق للأبد
+
                             const statRes = await fetch(`https://api.kie.ai/api/v1/jobs/recordInfo?taskId=${taskId}`, {
                                 method: "GET",
                                 headers: { "Authorization": `Bearer ${KIE_API_KEY}` }
@@ -359,40 +435,76 @@
                             // حركة شريط التحميل
                             if(fakeProgress < 92) fakeProgress += Math.floor(Math.random() * 4) + 1;
                             let currentProgress = taskData.progress || fakeProgress;
-                            if(currentProgress > 95 && taskData.status !== "SUCCESS" && taskData.successFlag !== 1) currentProgress = 95;
+                            
+                            // شرط النجاح الشامل
+                            const statStr = String(taskData.status).toUpperCase();
+                            const hasResultUrl = taskData.url || taskData.imageUrl || taskData.videoUrl || (taskData.images && taskData.images.length > 0) || (taskData.data && taskData.data.length > 0 && taskData.data[0].url);
+                            const isSuccess = (statStr === "SUCCESS" || statStr === "COMPLETED" || taskData.successFlag === 1 || currentProgress === 100);
+
+                            if(currentProgress > 95 && !isSuccess && !hasResultUrl) currentProgress = 95;
 
                             document.getElementById('vidProgressFill').style.width = `${currentProgress}%`;
                             document.getElementById('vidProgressText').innerText = `${currentProgress}%`;
 
-                            if (taskData.status === "SUCCESS" || taskData.successFlag === 1 || taskData.url || taskData.imageUrl) {
+                            if (isSuccess || hasResultUrl) {
                                 
-                                const finalUrl = taskData.url || taskData.imageUrl || taskData.videoUrl || (taskData.data && taskData.data.url);
+                                // تجميع الروابط في مصفوفة (لو طالب كذا صورة هيجيبهم كلهم)
+                                let urls = [];
+                                if (taskData.images && Array.isArray(taskData.images)) urls = taskData.images.map(u => u.url || u);
+                                else if (taskData.imageUrls && Array.isArray(taskData.imageUrls)) urls = taskData.imageUrls;
+                                else if (taskData.data && Array.isArray(taskData.data)) urls = taskData.data.map(u => u.url || u);
+                                else if (taskData.url) urls = [taskData.url];
+                                else if (taskData.imageUrl) urls = [taskData.imageUrl];
+                                else if (taskData.videoUrl) urls = [taskData.videoUrl];
+                                else if (taskData.output && Array.isArray(taskData.output)) urls = taskData.output;
                                 
-                                if (finalUrl) {
+                                // فلترة الروابط الفاضية
+                                urls = urls.filter(u => typeof u === 'string' && u.trim() !== '');
+                                
+                                if (urls.length > 0) {
                                     document.getElementById('vidProgressFill').style.width = `100%`;
                                     document.getElementById('vidProgressText').innerText = `100%`;
                                     
-                                    setTimeout(() => {
-                                        if(modelId.includes('video') || finalUrl.toLowerCase().match(/\.(mp4|webm|mov)$/)) {
-                                            output.innerHTML = `<video controls autoplay loop src="${finalUrl}" style="max-width: 100%; height: auto;"></video><br><div style="text-align:center; margin-top:10px;"><a href="${finalUrl}" target="_blank" class="btn-google" style="display:inline-flex; width:auto;"><i class="fa-solid fa-cloud-arrow-down" style="margin-right:5px;"></i> تحميل الفيديو</a></div>`;
+                                    // بناء كود الـ HTML لعرض الصور/الفيديوهات بنظام الـ Grid
+                                    let outHtml = `<div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center; align-items:center; width: 100%;">`;
+                                    
+                                    urls.forEach(u => {
+                                        if(modelType === 'video' || u.toLowerCase().match(/\.(mp4|webm|mov)$/)) {
+                                            outHtml += `<div style="width:100%; max-width:800px; margin: 0 auto; text-align:center;">
+                                                            <video controls autoplay loop src="${u}" style="max-width:100%; border-radius:15px; border:2px solid var(--primary);"></video>
+                                                            <br><a href="${u}" target="_blank" class="btn-google" style="display:inline-flex; margin-top:15px;"><i class="fa-solid fa-cloud-arrow-down" style="margin-right:5px;"></i> تحميل الفيديو</a>
+                                                        </div>`;
                                         } else {
-                                            output.innerHTML = `<img src="${finalUrl}" alt="Generated Media" style="max-width: 100%; height: auto;"><br><div style="text-align:center; margin-top:10px;"><a href="${finalUrl}" target="_blank" class="btn-google" style="display:inline-flex; width:auto;"><i class="fa-solid fa-download" style="margin-right:5px;"></i> تحميل الصورة</a></div>`;
+                                            // تحديد حجم الصورة بناءً على عدد الصور المطلوبة
+                                            const flexBasis = urls.length === 1 ? '100%' : 'calc(50% - 10px)';
+                                            outHtml += `<div style="flex: 1 1 ${flexBasis}; max-width:100%; text-align:center;">
+                                                            <img src="${u}" style="max-width:100%; height:auto; border-radius:15px; border:1px solid var(--glass-border); box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
+                                                            <br><a href="${u}" target="_blank" class="btn-google" style="display:inline-flex; margin-top:10px; font-size:14px; padding: 8px 15px;"><i class="fa-solid fa-download" style="margin-right:5px;"></i> تحميل</a>
+                                                        </div>`;
                                         }
+                                    });
+                                    outHtml += `</div>`;
+                                    
+                                    setTimeout(() => {
+                                        output.innerHTML = outHtml;
+                                        btn.disabled = false;
+                                        btn.innerHTML = 'تنفيذ الطلب <i class="fa-solid fa-wand-sparkles" style="margin-right: 8px;"></i>';
                                     }, 1000);
+
                                 } else {
-                                    throw new Error("اكتملت المهمة، ولكن لم يتم العثور على رابط الملف.");
+                                    throw new Error("اكتملت المهمة، ولكن لم يتم العثور على رابط الملفات.");
                                 }
-                            } else if (taskData.status === "FAILED" || taskData.successFlag === 2 || taskData.successFlag === 3) {
-                                throw new Error("فشل توليد الميديا: " + (taskData.failReason || "خطأ من المصدر"));
+                            } else if (statStr === "FAILED" || taskData.successFlag === 2 || taskData.successFlag === 3) {
+                                throw new Error("فشل الرندر (الإنتاج) في السيرفر: " + (taskData.failReason || "خطأ من المصدر"));
                             } else {
-                                // لو لسه مخلصتش، اسأل تاني بعد 4 ثواني
-                                setTimeout(checkStatus, 4000);
+                                // اسأل تاني بعد 5 ثواني
+                                setTimeout(checkStatus, 5000);
                             }
                         } catch (e) {
-                            throw e;
+                            throw e; // إرسال الخطأ لكتلة الـ catch الرئيسية
                         }
                     };
-                    setTimeout(checkStatus, 4000);
+                    setTimeout(checkStatus, 5000);
                 }
 
             } catch (error) {
@@ -400,14 +512,13 @@
                 
                 output.innerHTML = `<div style="background:rgba(255,82,82,0.1); border: 1px solid #ff5252; padding:20px; border-radius:15px; color:#ff5252; text-align:center;"><i class="fa-solid fa-triangle-exclamation" style="font-size:40px; margin-bottom:10px;"></i><br><b style="font-size:20px;">عذراً، حدث خطأ:</b><br><span style="color:#e0e0e0; font-size:15px; direction: ltr; display: block; margin-top: 10px;">${error.message}</span></div>`;
                 
-                userPoints += cost;
+                // استرجاع الكوينات بأمان في حالة حدوث أي خطأ
+                userPoints += finalCost;
                 await updateDoc(doc(db, "users", currentUser.uid), { points: userPoints });
                 document.getElementById('ptsSpan').innerText = userPoints;
-            } finally {
-                if (modelType === "text" || output.innerHTML.includes("عذراً")) {
-                    btn.disabled = false;
-                    btn.innerHTML = 'تنفيذ الطلب <i class="fa-solid fa-wand-sparkles" style="margin-right: 8px;"></i>';
-                }
+                
+                btn.disabled = false;
+                btn.innerHTML = 'تنفيذ الطلب <i class="fa-solid fa-wand-sparkles" style="margin-right: 8px;"></i>';
             }
         }
     </script>
