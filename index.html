@@ -90,17 +90,17 @@
         <h2><i class="fa-solid fa-clapperboard"></i> إستوديو الإنشاء</h2>
         
         <select id="modelSelector">
-            <optgroup label="محادثة ونصوص (سريع وموثوق)">
+            <optgroup label="نصوص (شغالة 100%)">
                 <option value="gpt-4o" data-type="text" data-cost="50">GPT-4o (التكلفة: 50 نقطة)</option>
-                <option value="claude-3-haiku" data-type="text" data-cost="30">Claude 3 Haiku (التكلفة: 30 نقطة)</option>
+                <option value="gpt-5.4-codex" data-type="text" data-cost="50">GPT 5.4 Codex (التكلفة: 50 نقطة)</option>
             </optgroup>
-            <optgroup label="توليد الصور (مهام مخصصة)">
-                <option value="bytedance/seedream" data-type="media" data-cost="100">Seedream Image (التكلفة: 100 نقطة)</option>
-                <option value="flux/kontext" data-type="media" data-cost="120">Flux Image (التكلفة: 120 نقطة)</option>
+            <optgroup label="توليد الصور">
+                <option value="dall-e-3" data-type="image" data-cost="150">DALL-E 3 (التكلفة: 150 نقطة)</option>
+                <option value="midjourney" data-type="image" data-cost="200">Midjourney (التكلفة: 200 نقطة)</option>
             </optgroup>
-            <optgroup label="توليد الفيديو السينمائي">
-                <option value="kling-3.0/video" data-type="media" data-cost="500">Kling 3.0 Video (التكلفة: 500 نقطة)</option>
-                <option value="runway/generate" data-type="media" data-cost="800">Runway Video (التكلفة: 800 نقطة)</option>
+            <optgroup label="توليد الفيديو">
+                <option value="kling-2.1" data-type="video" data-cost="800">Kling 2.1 Video (التكلفة: 800 نقطة)</option>
+                <option value="runway-gen3" data-type="video" data-cost="1000">Runway Video (التكلفة: 1000 نقطة)</option>
             </optgroup>
         </select>
 
@@ -251,7 +251,7 @@
             const selector = document.getElementById('modelSelector');
             const selectedOption = selector.options[selector.selectedIndex];
             const modelId = selectedOption.value;
-            const modelType = selectedOption.getAttribute('data-type'); // إما "text" أو "media" للصور والفيديو
+            const modelType = selectedOption.getAttribute('data-type'); 
             const cost = parseInt(selectedOption.getAttribute('data-cost'));
             const promptText = document.getElementById('aiInput').value;
 
@@ -274,9 +274,14 @@
                 if (modelType === "text") {
                     output.innerHTML = '<div style="text-align:center; padding: 20px;"><i class="fa-solid fa-atom fa-spin" style="font-size:50px; color:var(--primary); margin-bottom:15px;"></i><br><span style="color:var(--accent);">جاري المعالجة...</span></div>';
                     
-                    // استخدام مسار OpenAI القياسي اللي شغال ومضمون للنصوص
-                    const endpoint = "https://api.kie.ai/v1/chat/completions";
-                    const payload = { model: modelId, messages: [{ role: "user", content: promptText }] };
+                    let endpoint = "https://api.kie.ai/v1/chat/completions";
+                    let payload = { model: modelId, messages: [{ role: "user", content: promptText }] };
+
+                    // دعم خاص للـ Codex
+                    if(modelId.includes('codex')) {
+                        endpoint = "https://api.kie.ai/api/v1/responses";
+                        payload = { model: modelId, stream: false, input: [{ role: "user", content: [{ type: "input_text", text: promptText }] }] };
+                    }
 
                     const res = await fetch(endpoint, {
                         method: "POST",
@@ -285,24 +290,36 @@
                     });
                     
                     const data = await res.json();
-                    if (data.error) throw new Error(data.error.message || data.error.code);
 
                     if (data.choices && data.choices[0] && data.choices[0].message) {
                         output.innerHTML = data.choices[0].message.content.replace(/\n/g, '<br>');
+                    } else if (data.output && Array.isArray(data.output)) {
+                        const msgItem = data.output.find(item => item.type === "message");
+                        if (msgItem && msgItem.content && msgItem.content[0]) {
+                            output.innerHTML = (msgItem.content[0].text || msgItem.content[0].content).replace(/\n/g, '<br>');
+                        } else {
+                            output.innerHTML = msgItem ? msgItem.text.replace(/\n/g, '<br>') : `<pre style="text-align:left; color:#0f0;">${JSON.stringify(data.output, null, 2)}</pre>`;
+                        }
                     } else {
                         output.innerHTML = `<pre style="text-align:left; color:#0f0;">${JSON.stringify(data, null, 2)}</pre>`;
                     }
 
-                // ================== مسار المهام (الصور والفيديو) ==================
-                } else if (modelType === "media") {
+                // ================== مسار المهام (الصور والفيديو) الذكي ==================
+                } else if (modelType === "image" || modelType === "video") {
                     
-                    output.innerHTML = `<div class="progress-container"><div class="progress-title"><i class="fa-solid fa-film fa-bounce"></i> جاري إنتاج الميديا (صورة/فيديو)...</div><div class="progress-bar-bg"><div id="vidProgressFill" class="progress-bar-fill"></div></div><div id="vidProgressText" class="progress-text">0%</div></div>`;
+                    output.innerHTML = `<div class="progress-container"><div class="progress-title"><i class="fa-solid fa-film fa-bounce"></i> جاري الإنشاء...</div><div class="progress-bar-bg"><div id="vidProgressFill" class="progress-bar-fill"></div></div><div id="vidProgressText" class="progress-text">0%</div></div>`;
 
-                    // المسار الموحد لإنشاء مهام الصور والفيديو في نظام Kie.ai الجديد
-                    const createEndpoint = "https://api.kie.ai/api/v1/jobs/createTask";
-                    const payload = { model: modelId, input: { prompt: promptText } };
+                    // تحديد الرابط بناءً على النوع (الروابط القياسية اللي أغلب السيرفرات بتستخدمها)
+                    let endpoint = modelType === "image" 
+                                 ? "https://api.kie.ai/v1/images/generations" 
+                                 : "https://api.kie.ai/v1/videos/generations";
+                                 
+                    // الداتا الخاصة بالطلب
+                    let payload = modelType === "image"
+                                ? { model: modelId, prompt: promptText, n: 1 }
+                                : { model: modelId, prompt: promptText };
 
-                    const startRes = await fetch(createEndpoint, {
+                    const startRes = await fetch(endpoint, {
                         method: "POST",
                         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${KIE_API_KEY}` },
                         body: JSON.stringify(payload)
@@ -310,47 +327,65 @@
                     
                     const startData = await startRes.json();
                     
-                    if (startData.error) throw new Error(startData.error.message || "فشل بدء مهمة الميديا. تأكد من اسم الموديل.");
-                    
-                    // استخراج الـ Task ID للمتابعة
-                    const taskId = startData.data?.taskId || startData.taskId || startData.id;
-                    if(!taskId) throw new Error("السيرفر لم يرسل رقم مهمة (Task ID Missing)");
+                    // 1. هل النتيجة رجعت فوراً من غير Task؟ (بعض الصور بترجع كده)
+                    if (startData.data && startData.data[0] && startData.data[0].url) {
+                        let mediaUrl = startData.data[0].url;
+                        output.innerHTML = `<img src="${mediaUrl}" alt="Generated Image"><br><div style="text-align:center; margin-top:10px;"><a href="${mediaUrl}" target="_blank" class="btn-google" style="display:inline-flex; width:auto;"><i class="fa-solid fa-download" style="margin-right:5px;"></i> تحميل الصورة</a></div>`;
+                        
+                        // نرجع الزرار لأننا خلصنا
+                        btn.disabled = false;
+                        btn.innerHTML = 'تنفيذ الطلب <i class="fa-solid fa-wand-sparkles" style="margin-right: 8px;"></i>';
+                        return;
+                    }
 
-                    // نظام الكشف المستمر (Polling) عن حالة المهمة
+                    // 2. محاولة استخراج رقم المهمة (Task ID) بأي شكل
+                    const taskId = startData.id || startData.task_id || startData.taskId || (startData.data && startData.data.taskId);
+                    
+                    if(!taskId) {
+                        // لو مفيش رقم مهمة ومفيش رابط مباشر، نعرض النتيجة الخضراء للمطور (الـ Fallback)
+                        output.innerHTML = `<div style="text-align:left; direction:ltr; background:#111; padding:15px; border-radius:10px;"><strong style="color:var(--accent);">بيانات السيرفر (نسخ هذا الكود للتشخيص):</strong><br><pre style="color:#0f0; font-size:14px; white-space:pre-wrap;">${JSON.stringify(startData, null, 2)}</pre></div>`;
+                        
+                        // إرجاع النقاط لأن العملية فشلت
+                        userPoints += cost;
+                        await updateDoc(doc(db, "users", currentUser.uid), { points: userPoints });
+                        document.getElementById('ptsSpan').innerText = userPoints;
+                        
+                        btn.disabled = false;
+                        btn.innerHTML = 'تنفيذ الطلب <i class="fa-solid fa-wand-sparkles" style="margin-right: 8px;"></i>';
+                        return;
+                    }
+
+                    // 3. نظام الكشف المستمر (Polling) لو فيه Task ID
                     let fakeProgress = 0;
                     const checkStatus = async () => {
                         try {
-                            const statRes = await fetch(`https://api.kie.ai/api/v1/jobs/recordInfo?taskId=${taskId}`, {
+                            const statRes = await fetch(`${endpoint}/${taskId}`, {
                                 method: "GET",
                                 headers: { "Authorization": `Bearer ${KIE_API_KEY}` }
                             });
                             
                             const statData = await statRes.json();
-                            const taskData = statData.data || statData; // للتوافق مع استجابات السيرفر المتعددة
+                            const taskData = statData.data || statData; 
 
                             if (taskData.error) throw new Error(taskData.error.message);
 
-                            // زيادة العداد الوهمي لعدم شعور المستخدم بالملل
                             if(fakeProgress < 92) fakeProgress += Math.floor(Math.random() * 4) + 1;
                             let currentProgress = taskData.progress || fakeProgress;
-                            if(currentProgress > 95 && taskData.successFlag !== 1) currentProgress = 95;
+                            if(currentProgress > 95 && (taskData.status !== "completed" && taskData.status !== "success")) currentProgress = 95;
 
                             document.getElementById('vidProgressFill').style.width = `${currentProgress}%`;
                             document.getElementById('vidProgressText').innerText = `${currentProgress}%`;
 
-                            // successFlag: 1 يعني المهمة تمت بنجاح
-                            if (taskData.successFlag === 1 || taskData.status === "success") {
+                            if (taskData.status === "completed" || taskData.status === "success" || taskData.url) {
                                 
-                                // استخراج الرابط أياً كان مسماه
-                                const mediaUrl = taskData.url || taskData.videoUrl || taskData.imageUrl;
+                                const mediaUrl = taskData.url || (taskData.data && taskData.data[0] && taskData.data[0].url) || (taskData.output && taskData.output[0]);
                                 
                                 if (mediaUrl) {
                                     document.getElementById('vidProgressFill').style.width = `100%`;
                                     document.getElementById('vidProgressText').innerText = `100%`;
                                     
                                     setTimeout(() => {
-                                        // معرفة نوع الملف بناءً على الرابط
-                                        if(mediaUrl.toLowerCase().match(/\.(mp4|webm)$/)) {
+                                        if(mediaUrl.toLowerCase().match(/\.(mp4|webm|mov)$/)) {
                                             output.innerHTML = `<video controls autoplay loop src="${mediaUrl}"></video><br><div style="text-align:center; margin-top:10px;"><a href="${mediaUrl}" target="_blank" class="btn-google" style="display:inline-flex; width:auto;"><i class="fa-solid fa-cloud-arrow-down" style="margin-right:5px;"></i> تحميل الفيديو</a></div>`;
                                         } else {
                                             output.innerHTML = `<img src="${mediaUrl}" alt="Generated Media"><br><div style="text-align:center; margin-top:10px;"><a href="${mediaUrl}" target="_blank" class="btn-google" style="display:inline-flex; width:auto;"><i class="fa-solid fa-download" style="margin-right:5px;"></i> تحميل الصورة</a></div>`;
@@ -359,17 +394,15 @@
                                 } else {
                                     throw new Error("المهمة اكتملت ولكن لم يتم العثور على رابط الملف.");
                                 }
-                            } else if (taskData.successFlag === 2 || taskData.successFlag === 3) {
-                                throw new Error("فشل الرندر (الإنتاج) في السيرفر! تم إرجاع الرصيد.");
+                            } else if (taskData.status === "failed") {
+                                throw new Error("فشل الرندر (الإنتاج) في السيرفر!");
                             } else {
-                                // إعادة الكشف بعد 5 ثواني
                                 setTimeout(checkStatus, 5000);
                             }
                         } catch (e) {
                             throw e;
                         }
                     };
-                    // بدء الكشف
                     setTimeout(checkStatus, 5000);
                 }
 
@@ -382,8 +415,11 @@
                 await updateDoc(doc(db, "users", currentUser.uid), { points: userPoints });
                 document.getElementById('ptsSpan').innerText = userPoints;
             } finally {
-                btn.disabled = false;
-                btn.innerHTML = 'تنفيذ الطلب <i class="fa-solid fa-wand-sparkles" style="margin-right: 8px;"></i>';
+                // نتأكد إن الزرار مش هيفتح لو الكود دخل في تتبع (Polling)، هيفتح بس لو مفيش Task
+                if (modelType === "text" || output.innerHTML.includes("Raw") || output.innerHTML.includes("عذراً")) {
+                    btn.disabled = false;
+                    btn.innerHTML = 'تنفيذ الطلب <i class="fa-solid fa-wand-sparkles" style="margin-right: 8px;"></i>';
+                }
             }
         }
     </script>
