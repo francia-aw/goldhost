@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Hub - منصة الذكاء الاصطناعي الشاملة</title>
-    <!-- خطوط وأيقونات -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* ================= ستايل الموقع (UI/UX) ================= */
         :root {
             --primary: #8a2be2; --primary-hover: #9b4dca; --accent: #00d2ff; --accent-glow: rgba(0, 210, 255, 0.5);
             --bg-gradient: linear-gradient(135deg, #09090e 0%, #161722 100%);
@@ -18,7 +16,6 @@
         }
         body { font-family: 'Tajawal', sans-serif; background: var(--bg-gradient); color: var(--text-main); margin: 0; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
         
-        /* شريط التنقل */
         header { background: rgba(9, 9, 14, 0.85); backdrop-filter: blur(15px); border-bottom: 1px solid var(--glass-border); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 30px rgba(0,0,0,0.6); }
         .logo { display: flex; align-items: center; gap: 15px; }
         .logo h2 { margin: 0; font-weight: 900; background: linear-gradient(90deg, var(--accent), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 28px; }
@@ -29,7 +26,6 @@
         .btn-google { background: white; color: #1a1a1a; border-radius: 25px; padding: 10px 25px; display: flex; align-items: center; gap: 10px; font-weight: 900; box-shadow: 0 4px 15px rgba(255,255,255,0.2);}
         .btn-google:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,255,255,0.3); }
         
-        /* الحاويات والصفحات */
         .container { flex: 1; max-width: 900px; margin: 40px auto; width: 90%; background: var(--glass-bg); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 40px; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5); }
         .page { display: none; animation: fadeIn 0.4s ease-out forwards; }
         .page.active { display: block; }
@@ -40,17 +36,14 @@
         select option { background: #161722; color: #fff; padding: 10px; }
         textarea:focus, input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
         
-        /* الأزرار */
         .action-btn { background: linear-gradient(45deg, var(--primary), var(--accent)); color: white; border: none; padding: 18px 30px; border-radius: 15px; font-size: 18px; font-weight: 900; cursor: pointer; width: 100%; transition: all 0.4s; box-shadow: 0 5px 20px rgba(0, 210, 255, 0.3); text-transform: uppercase; }
         .action-btn:hover:not(:disabled) { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 30px rgba(0, 210, 255, 0.5); letter-spacing: 1px; }
         .action-btn:disabled { background: #444; color: #888; cursor: not-allowed; box-shadow: none; transform: none; background-image: none;}
         
-        /* منطقة الردود (Output) */
         #aiOutput { margin-top: 35px; padding: 30px; background: rgba(0, 0, 0, 0.6); border-radius: 20px; border: 1px solid var(--glass-border); min-height: 120px; line-height: 1.9; font-size: 18px; text-align: right; position: relative; overflow-wrap: break-word; white-space: pre-wrap; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);}
         #aiOutput img { max-width: 100%; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--glass-border); display: block; margin: 0 auto;}
         #aiOutput video { width: 100%; border-radius: 15px; box-shadow: 0 0 40px rgba(138, 43, 226, 0.4); border: 2px solid var(--primary); background: #000; }
         
-        /* شريط التحميل للفيديو */
         .progress-container { background: rgba(0,0,0,0.7); padding: 25px; border-radius: 15px; border: 1px solid var(--accent); box-shadow: inset 0 0 20px rgba(0,0,0,0.8); text-align: center;}
         .progress-title { color: var(--accent); font-weight: 900; margin-bottom: 15px; font-size: 18px; text-shadow: 0 0 10px var(--accent-glow); }
         .progress-bar-bg { width: 100%; background: #222; border-radius: 10px; height: 22px; overflow: hidden; position: relative; border: 1px solid #444; }
@@ -58,7 +51,6 @@
         .progress-bar-fill::after { content: ""; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shimmer 1.5s infinite; }
         @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
         
-        /* بطاقات الأسعار */
         .plans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 30px; }
         .plan-card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); padding: 35px; border-radius: 20px; text-align: center; transition: all 0.3s; }
         .plan-card:hover { transform: translateY(-10px); background: rgba(255, 255, 255, 0.06); box-shadow: 0 15px 30px rgba(0,0,0,0.4);}
@@ -69,7 +61,6 @@
 </head>
 <body>
 
-    <!-- ================= القائمة العلوية ================= -->
     <header>
         <div class="logo">
             <i class="fa-solid fa-microchip" style="color: var(--accent); font-size: 30px;"></i>
@@ -83,96 +74,86 @@
             <button onclick="showPage('aiPage')" id="navAi" style="display:none;"><i class="fa-solid fa-wand-magic-sparkles"></i> الإستوديو</button>
             <button onclick="showPage('pricingPage')"><i class="fa-solid fa-cart-shopping"></i> الباقات</button>
             <button onclick="showPage('adminPage')" id="navAdmin" style="display:none; color:#ff5252;"><i class="fa-solid fa-shield-halved"></i> الإدارة</button>
-            <button id="loginBtn" class="btn-google"><i class="fa-brands fa-google"></i> تسجيل الدخول</button>
+            <button id="loginBtn" class="btn-google"><i class="fa-brands fa-google"></i> الدخول</button>
         </nav>
     </header>
 
-    <!-- ================= الرئيسية ================= -->
     <div id="homePage" class="container page active">
         <div style="text-align: center; padding: 50px 0;">
             <i class="fa-brands fa-space-awesome" style="font-size: 110px; color: var(--accent); margin-bottom: 30px; text-shadow: 0 0 40px var(--accent-glow);"></i>
             <h1 style="font-size: 50px; margin-bottom: 20px; font-weight: 900;">مستقبلك يبدأ هنا</h1>
-            <p style="font-size: 22px; max-width: 650px; margin: 0 auto; color: #ccc;">قم بتسجيل الدخول الان واستمتع بأقوى نماذج الذكاء الاصطناعي في العالم لتوليد النصوص، الصور، والفيديوهات بضغطة زر واحدة.</p>
+            <p style="font-size: 22px; max-width: 650px; margin: 0 auto; color: #ccc;">سجل دخولك الان واستمتع بأقوى نماذج الذكاء الاصطناعي (النصوص، الصور، والفيديو).</p>
         </div>
     </div>
 
-    <!-- ================= إستوديو الذكاء الاصطناعي ================= -->
     <div id="aiPage" class="container page">
         <h2><i class="fa-solid fa-clapperboard"></i> إستوديو الإنشاء</h2>
         
         <select id="modelSelector">
-            <optgroup label="محادثة ونصوص (GPT Models)">
-                <option value="GPT 5.4" data-type="text" data-cost="50">GPT 5.4 (التكلفة: 50 نقطة)</option>
-                <option value="GPT 5.5" data-type="text" data-cost="75">GPT 5.5 (التكلفة: 75 نقطة)</option>
-                <option value="gpt-4o" data-type="text" data-cost="100">GPT-4o Standard (التكلفة: 100 نقطة)</option>
+            <optgroup label="نصوص (Kie Unified API)">
+                <!-- تم تصحيح الأسماء لتطابق التوثيق الرسمي gpt-x.x-codex -->
+                <option value="gpt-5.4-codex" data-type="text" data-cost="50">GPT 5.4 Codex (التكلفة: 50 نقطة)</option>
+                <option value="gpt-5.5-codex" data-type="text" data-cost="75">GPT 5.5 Codex (التكلفة: 75 نقطة)</option>
             </optgroup>
-            <optgroup label="توليد صور">
+            <optgroup label="توليد الصور">
                 <option value="dall-e-3" data-type="image" data-cost="150">DALL-E 3 (التكلفة: 150 نقطة)</option>
-                <option value="midjourney" data-type="image" data-cost="200">Midjourney (التكلفة: 200 نقطة)</option>
             </optgroup>
             <optgroup label="توليد فيديو">
-                <option value="kling-2.1" data-type="video" data-cost="800">Kling 2.1 Video (التكلفة: 800 نقطة)</option>
-                <option value="luma-dream-machine" data-type="video" data-cost="1000">Luma Dream Video (التكلفة: 1000 نقطة)</option>
+                <option value="kling-2.1" data-type="video" data-cost="800">Kling 2.1 (التكلفة: 800 نقطة)</option>
             </optgroup>
         </select>
 
-        <textarea id="aiInput" rows="5" placeholder="اكتب أوامرك هنا بالتفصيل... (يُفضل استخدام اللغة الإنجليزية مع الصور والفيديو للحصول على دقة أعلى)"></textarea>
+        <textarea id="aiInput" rows="5" placeholder="اكتب وصفك هنا بدقة..."></textarea>
         <button id="submitBtn" class="action-btn" onclick="generateAI()">تنفيذ الطلب <i class="fa-solid fa-wand-sparkles" style="margin-right: 8px;"></i></button>
         
         <div id="aiOutput">
             <div style="text-align: center; color: var(--text-muted); margin-top: 20px;">
-                <i class="fa-solid fa-layer-group" style="font-size: 40px; margin-bottom: 15px;"></i><br>مساحة العرض الخاصة بك. النتائج ستظهر هنا...
+                <i class="fa-solid fa-layer-group" style="font-size: 40px; margin-bottom: 15px;"></i><br>مساحة العرض...
             </div>
         </div>
     </div>
 
-    <!-- ================= الأسعار ================= -->
     <div id="pricingPage" class="container page">
         <h2 style="text-align: center; margin-bottom: 40px; font-weight: 900;">باقات الشحن</h2>
         <div class="plans-grid">
             <div class="plan-card">
                 <h3>5$</h3>
                 <p style="font-size: 26px; font-weight: 900; color: white;">5,000 <i class="fa-solid fa-gem" style="color: var(--primary);"></i></p>
-                <p style="color:#aaa;">باقة البداية للتجربة</p>
             </div>
             <div class="plan-card" style="border-color: var(--accent); background: rgba(0, 210, 255, 0.05); box-shadow: 0 0 30px rgba(0,210,255,0.1);">
                 <h3 style="color: var(--accent);">30$</h3>
                 <p style="font-size: 26px; font-weight: 900; color: white;">25,000 <i class="fa-solid fa-gem" style="color: var(--accent);"></i></p>
-                <p style="color:#aaa;">باقة المحترفين (الأكثر طلباً)</p>
             </div>
         </div>
         <div class="discord-box">
             <i class="fa-brands fa-discord"></i>
-            <h2>تواصل معنا لشحن رصيدك</h2>
+            <h2>لشحن رصيدك تواصل مع</h2>
             <h1 style="margin: 20px 0; font-family: monospace; letter-spacing: 4px; font-size: 38px; color: #fff;">kareem067468</h1>
-            <p style="color: #e0e0e0; margin: 0; font-size: 18px;">قم بإضافة هذا الحساب في الديسكورد وتزويدنا بإيميلك المسجل لإضافة الكوينات فوراً.</p>
         </div>
     </div>
 
-    <!-- ================= الإدارة ================= -->
     <div id="adminPage" class="container page">
         <div id="adminLogin" style="text-align: center;">
             <i class="fa-solid fa-shield-dog" style="font-size: 70px; color: #ff5252; margin-bottom: 25px;"></i>
-            <h2>نظام الحماية المركزية</h2>
-            <input type="password" id="adminPin" placeholder="أدخل رمز مرور الإدارة" style="max-width: 350px; margin: 0 auto 20px; display: block; text-align: center;">
-            <button class="action-btn" onclick="verifyAdmin()" style="max-width: 350px; background: #ff5252; box-shadow: 0 5px 20px rgba(255,82,82,0.4);">دخول <i class="fa-solid fa-arrow-right-to-bracket"></i></button>
+            <h2>الإدارة المركزية</h2>
+            <input type="password" id="adminPin" placeholder="رمز المرور السري" style="max-width: 350px; margin: 0 auto 20px; display: block; text-align: center;">
+            <button class="action-btn" onclick="verifyAdmin()" style="max-width: 350px; background: #ff5252; box-shadow: 0 5px 20px rgba(255,82,82,0.4);">دخول</button>
         </div>
         <div id="adminPanel" style="display: none; border: 2px solid #ff5252; background: rgba(255, 82, 82, 0.08); padding: 40px; border-radius: 20px; margin-top: 20px;">
-            <h2 style="color: #ff5252;"><i class="fa-solid fa-coins"></i> تحويل الكوينات للمستخدمين</h2>
-            <input type="email" id="targetEmail" placeholder="البريد الإلكتروني للعميل">
-            <input type="number" id="pointsToAdd" placeholder="الكمية المراد شحنها">
-            <button class="action-btn" onclick="addPointsToUser()" style="background: #ff5252; box-shadow: none;">إرسال الكوينات <i class="fa-solid fa-bolt"></i></button>
+            <h2 style="color: #ff5252;"><i class="fa-solid fa-coins"></i> شحن المستخدمين</h2>
+            <input type="email" id="targetEmail" placeholder="إيميل العميل">
+            <input type="number" id="pointsToAdd" placeholder="النقاط">
+            <button class="action-btn" onclick="addPointsToUser()" style="background: #ff5252; box-shadow: none;">إرسال الكوينات</button>
             <p id="adminMessage" style="margin-top: 20px; font-weight: bold; font-size: 20px; text-align: center;"></p>
         </div>
     </div>
 
-    <!-- ================= منطق العمل والبرمجة ================= -->
+    <!-- Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
 
-        // إعدادات Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCU0JMGSBti6t8xolgEXSltkOr00aC4naM",
             authDomain: "goldhost-d3ab7.firebaseapp.com",
@@ -189,13 +170,10 @@
 
         let currentUser = null;
         let userPoints = 0;
-        
-        // المتغيرات الثابتة
         const ADMIN_EMAIL = "kareemwael0216@gmail.com";
         const ADMIN_PIN = "K_425422";
         const KIE_API_KEY = "1cb2291c2c38d8335da071e20ee5bdbc"; 
 
-        // التوجيه (Routing)
         window.showPage = (pageId) => {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-nav'));
@@ -203,12 +181,10 @@
             event.currentTarget.classList.add('active-nav');
         }
 
-        // تسجيل الدخول
         document.getElementById('loginBtn').addEventListener('click', () => {
-            signInWithPopup(auth, provider).catch(err => alert("حدث خطأ في التسجيل: " + err.message));
+            signInWithPopup(auth, provider).catch(err => alert("خطأ: " + err.message));
         });
 
-        // متابعة حالة الحساب وجلب الكوينات
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
@@ -233,7 +209,6 @@
             }
         });
 
-        // التحقق من الإدارة
         window.verifyAdmin = () => {
             const pin = document.getElementById('adminPin').value;
             if (pin === ADMIN_PIN && currentUser.email === ADMIN_EMAIL) {
@@ -242,7 +217,6 @@
             } else { alert("❌ بيانات الإدارة غير صحيحة."); }
         }
 
-        // شحن رصيد العميل
         window.addPointsToUser = async () => {
             const email = document.getElementById('targetEmail').value;
             const points = parseInt(document.getElementById('pointsToAdd').value);
@@ -253,7 +227,7 @@
             
             if (querySnapshot.empty) {
                 document.getElementById('adminMessage').style.color = "#ff5252";
-                document.getElementById('adminMessage').innerText = "❌ الحساب غير مسجل في قاعدة البيانات!";
+                document.getElementById('adminMessage').innerText = "❌ الحساب غير مسجل!";
                 return;
             }
 
@@ -261,7 +235,7 @@
                 const currentPts = userDoc.data().points;
                 await updateDoc(doc(db, "users", userDoc.id), { points: currentPts + points });
                 document.getElementById('adminMessage').style.color = "#00d2ff";
-                document.getElementById('adminMessage').innerText = `✅ تم إضافة ${points} كوينز بنجاح إلى ${email}`;
+                document.getElementById('adminMessage').innerText = `✅ تم الشحن بنجاح لـ ${email}`;
                 
                 if(email === currentUser.email) {
                     userPoints += points;
@@ -270,9 +244,8 @@
             });
         }
 
-        // ================= الأداة السحرية للذكاء الاصطناعي (Smart API Parser) =================
         window.generateAI = async () => {
-            if (!currentUser) return alert("يرجى تسجيل الدخول باستخدام حساب جوجل أولاً");
+            if (!currentUser) return alert("سجل الدخول أولاً");
             
             const selector = document.getElementById('modelSelector');
             const selectedOption = selector.options[selector.selectedIndex];
@@ -281,8 +254,8 @@
             const cost = parseInt(selectedOption.getAttribute('data-cost'));
             const promptText = document.getElementById('aiInput').value;
 
-            if (userPoints < cost) return alert("❌ رصيد الكوينات الخاص بك غير كافٍ. يرجى التوجه لصفحة الباقات وشحن حسابك.");
-            if (!promptText.trim()) return alert("⚠️ يرجى كتابة وصف للطلب أولاً.");
+            if (userPoints < cost) return alert("❌ رصيدك لا يكفي.");
+            if (!promptText.trim()) return alert("⚠️ اكتب وصف للطلب.");
 
             const btn = document.getElementById('submitBtn');
             const output = document.getElementById('aiOutput');
@@ -290,25 +263,37 @@
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> جاري الإنشاء...';
             
-            // خصم مؤقت
             userPoints -= cost;
             document.getElementById('ptsSpan').innerText = userPoints;
             await updateDoc(doc(db, "users", currentUser.uid), { points: userPoints });
 
             try {
                 if (modelType === "text" || modelType === "image") {
-                    output.innerHTML = '<div style="text-align:center; padding: 20px;"><i class="fa-solid fa-atom fa-spin" style="font-size:50px; color:var(--primary); margin-bottom:15px;"></i><br><span style="color:var(--accent);">الذكاء الاصطناعي يحلل طلبك...</span></div>';
+                    output.innerHTML = '<div style="text-align:center; padding: 20px;"><i class="fa-solid fa-atom fa-spin" style="font-size:50px; color:var(--primary); margin-bottom:15px;"></i><br><span style="color:var(--accent);">جاري المعالجة...</span></div>';
                     
-                    // تحديد الرابط والبيانات
-                    // إذا كان النموذج يبدأ بـ GPT (كما في الصورة) نرسله إلى codex، غير ذلك نرسله للمسار العادي
-                    const isCodex = modelId.toUpperCase().includes('GPT 5.');
-                    let endpoint = modelType === "image" ? "https://api.kie.ai/v1/images/generations" 
-                                 : isCodex ? "https://api.kie.ai/codex/v1/responses" 
-                                 : "https://api.kie.ai/v1/chat/completions";
-                        
-                    let payload = modelType === "text" 
-                        ? { model: modelId, messages: [{ role: "user", content: promptText }] }
-                        : { model: modelId, prompt: promptText, n: 1 };
+                    // التحديث الجذري: استخدام الرابط الموحد الصحيح لنماذج Kie.ai وتعديل Payload
+                    let endpoint = "";
+                    let payload = {};
+
+                    if (modelType === "text") {
+                        // استخدام Unified API endpoint
+                        endpoint = "https://api.kie.ai/api/v1/responses";
+                        payload = {
+                            model: modelId,
+                            stream: false,
+                            input: [
+                                {
+                                    role: "user",
+                                    content: [
+                                        { type: "input_text", text: promptText }
+                                    ]
+                                }
+                            ]
+                        };
+                    } else if (modelType === "image") {
+                        endpoint = "https://api.kie.ai/v1/images/generations";
+                        payload = { model: modelId, prompt: promptText, n: 1 };
+                    }
 
                     const res = await fetch(endpoint, {
                         method: "POST",
@@ -320,62 +305,41 @@
                     });
                     
                     const data = await res.json();
-                    
-                    // التأكد من عدم وجود خطأ صريح من السيرفر
-                    if (data.error) throw new Error(data.error.message || data.error.code || "تم رفض الطلب من السيرفر الرئيسي.");
+
+                    if (data.error) throw new Error(data.error.message || data.error.code || "رفض من السيرفر");
 
                     if (modelType === "text") {
-                        // خوارزمية ذكية لاستخراج النص أياً كان شكل استجابة السيرفر
+                        // استخراج النص من Unified Response Format
                         let responseText = "";
                         
                         if (data.output && Array.isArray(data.output)) {
-                            // نظام الـ Codex (حسب توثيقهم بالصورة)
-                            const msgItem = data.output.find(item => item.type === "message" || item.text);
-                            responseText = msgItem ? (msgItem.text || msgItem.content) : JSON.stringify(data.output, null, 2);
+                            const msgItem = data.output.find(item => item.type === "message");
+                            if (msgItem && msgItem.content && msgItem.content[0]) {
+                                responseText = msgItem.content[0].text || msgItem.content[0].content;
+                            } else {
+                                responseText = msgItem ? msgItem.text : JSON.stringify(data.output, null, 2);
+                            }
                         } else if (data.choices && data.choices[0] && data.choices[0].message) {
-                            // نظام OpenAI القياسي
-                            responseText = data.choices[0].message.content;
-                        } else if (typeof data === "string") {
-                            responseText = data;
-                        } else if (data.text) {
-                            responseText = data.text;
-                        } else if (data.message) {
-                            responseText = data.message;
-                        } else if (data.response) {
-                            responseText = data.response;
+                            responseText = data.choices[0].message.content; // Backup Standard OpenAI
                         }
 
-                        // إذا نجحت الخوارزمية في استخراج النص
                         if (responseText) {
-                            // تحسين عرض النص (تحويل المسافات لأسطر HTML)
                             output.innerHTML = responseText.replace(/\n/g, '<br>');
                         } else {
-                            // إذا كان الهيكل غريباً تماماً، نطبع الـ JSON ككود
-                            output.innerHTML = `<div style="text-align:left; direction:ltr; background:#111; padding:15px; border-radius:10px; border-left: 4px solid var(--primary);"><strong style="color:var(--accent);">Raw Data:</strong><br><pre style="color:#0f0; margin:0; font-size:14px; white-space:pre-wrap;">${JSON.stringify(data, null, 2)}</pre></div>`;
+                            output.innerHTML = `<div style="text-align:left; direction:ltr; background:#111; padding:15px; border-radius:10px;"><strong style="color:var(--accent);">Raw Output:</strong><br><pre style="color:#0f0; font-size:14px; white-space:pre-wrap;">${JSON.stringify(data, null, 2)}</pre></div>`;
                         }
                     } else if (modelType === "image") {
                         if (data.data && data.data[0] && data.data[0].url) {
-                            output.innerHTML = `<img src="${data.data[0].url}" alt="AI Generated Image">
-                                                <br><div style="text-align:center; margin-top:15px;">
-                                                <a href="${data.data[0].url}" target="_blank" class="btn-google" style="display:inline-flex; width:auto; text-decoration:none;"><i class="fa-solid fa-expand"></i> عرض الصورة كاملة</a>
-                                                </div>`;
+                            output.innerHTML = `<img src="${data.data[0].url}" alt="AI Image"><br><div style="text-align:center; margin-top:15px;"><a href="${data.data[0].url}" target="_blank" class="btn-google" style="display:inline-flex; width:auto; text-decoration:none;">تحميل الصورة</a></div>`;
                         } else {
-                            output.innerHTML = `<div style="text-align:left; direction:ltr; background:#111; padding:15px; border-radius:10px; border-left: 4px solid var(--primary);"><strong style="color:var(--accent);">Raw Data (No Image URL Found):</strong><br><pre style="color:#0f0; margin:0; font-size:14px; white-space:pre-wrap;">${JSON.stringify(data, null, 2)}</pre></div>`;
+                            throw new Error("لم يتم العثور على رابط الصورة.");
                         }
                     }
 
                 } else if (modelType === "video") {
-                    // بناء مشغل الفيديو وشريط التحميل
-                    output.innerHTML = `
-                        <div class="progress-container">
-                            <div class="progress-title"><i class="fa-solid fa-film fa-bounce"></i> جاري الإنتاج السينمائي للفيديو...</div>
-                            <div class="progress-bar-bg"><div id="vidProgressFill" class="progress-bar-fill"></div></div>
-                            <div id="vidProgressText" class="progress-text">0%</div>
-                            <p style="font-size:14px; color:#aaa; margin-top:10px;">(توليد الفيديو يتطلب قوة معالجة خارقة، قد يستغرق من دقيقة لـ 5 دقائق. لا تغلق الصفحة!)</p>
-                        </div>
-                    `;
+                    // كود الفيديو (نفس النظام)
+                    output.innerHTML = `<div class="progress-container"><div class="progress-title"><i class="fa-solid fa-film fa-bounce"></i> إخراج الفيديو...</div><div class="progress-bar-bg"><div id="vidProgressFill" class="progress-bar-fill"></div></div><div id="vidProgressText" class="progress-text">0%</div></div>`;
 
-                    // 1. طلب إنشاء الفيديو
                     const startRes = await fetch("https://api.kie.ai/v1/videos/generations", {
                         method: "POST",
                         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${KIE_API_KEY}` },
@@ -383,11 +347,9 @@
                     });
                     const startData = await startRes.json();
                     
-                    if (startData.error) throw new Error(startData.error.message || "فشل بدء مهمة الفيديو");
-                    const taskId = startData.id || startData.task_id; // دعم الاسمين
-                    if(!taskId) throw new Error("السيرفر لم يرسل رقم مهمة للفيديو! (Task ID Missing)");
+                    if (startData.error) throw new Error(startData.error.message);
+                    const taskId = startData.id || startData.task_id;
 
-                    // 2. نظام الكشف المستمر (Polling)
                     let fakeProgress = 0;
                     const checkStatus = async () => {
                         try {
@@ -395,35 +357,25 @@
                                 headers: { "Authorization": `Bearer ${KIE_API_KEY}` }
                             });
                             const statData = await statRes.json();
-                            
-                            if (statData.error) throw new Error(statData.error.message);
 
-                            if(fakeProgress < 92) { fakeProgress += Math.floor(Math.random() * 4) + 1; }
+                            if(fakeProgress < 92) fakeProgress += Math.floor(Math.random() * 4) + 1;
                             let currentProgress = statData.progress || fakeProgress;
-                            if(currentProgress > 95 && statData.status !== "completed" && statData.status !== "success") currentProgress = 95;
+                            if(currentProgress > 95 && statData.status !== "completed") currentProgress = 95;
 
                             document.getElementById('vidProgressFill').style.width = `${currentProgress}%`;
                             document.getElementById('vidProgressText').innerText = `${currentProgress}%`;
 
-                            if (statData.status === "completed" || statData.status === "success" || statData.url || (statData.data && statData.data[0] && statData.data[0].url)) {
+                            if (statData.status === "completed" || statData.url) {
                                 const videoUrl = statData.url || (statData.data && statData.data[0].url);
                                 document.getElementById('vidProgressFill').style.width = `100%`;
                                 document.getElementById('vidProgressText').innerText = `100%`;
-                                
                                 setTimeout(() => {
-                                    output.innerHTML = `
-                                        <video controls autoplay loop src="${videoUrl}"></video>
-                                        <br><br>
-                                        <div style="text-align:center;">
-                                            <a href="${videoUrl}" target="_blank" class="btn-google" style="display:inline-flex; width:auto; text-decoration:none;">
-                                                <i class="fa-solid fa-cloud-arrow-down"></i> تحميل الفيديو بدقة عالية
-                                            </a>
-                                        </div>`;
+                                    output.innerHTML = `<video controls autoplay loop src="${videoUrl}"></video><br><a href="${videoUrl}" target="_blank" class="btn-google" style="display:inline-flex;">تحميل الفيديو</a>`;
                                 }, 1500);
                             } else if (statData.status === "failed") {
-                                throw new Error("فشل الرندر في السيرفر! تمت إعادة الكوينات.");
+                                throw new Error("فشل الرندر في السيرفر!");
                             } else {
-                                setTimeout(checkStatus, 6000); // فحص كل 6 ثواني
+                                setTimeout(checkStatus, 6000);
                             }
                         } catch (e) {
                             throw e;
@@ -433,14 +385,9 @@
                 }
 
             } catch (error) {
-                console.error("Critical System Error:", error);
-                output.innerHTML = `<div style="background:rgba(255,82,82,0.1); border: 1px solid #ff5252; padding:20px; border-radius:15px; color:#ff5252; text-align:center;">
-                                        <i class="fa-solid fa-triangle-exclamation" style="font-size:40px; margin-bottom:10px;"></i>
-                                        <br><b style="font-size:20px;">عذراً، حدث خطأ أثناء المعالجة</b><br><br>
-                                        <span style="color:#e0e0e0; font-size:15px;">${error.message}</span>
-                                    </div>`;
+                console.error("System Error:", error);
+                output.innerHTML = `<div style="background:rgba(255,82,82,0.1); border: 1px solid #ff5252; padding:20px; border-radius:15px; color:#ff5252; text-align:center;"><i class="fa-solid fa-triangle-exclamation" style="font-size:40px; margin-bottom:10px;"></i><br><b style="font-size:20px;">عذراً، حدث خطأ:</b><br><span style="color:#e0e0e0; font-size:15px;">${error.message}</span></div>`;
                 
-                // استرجاع الكوينات بأمان تام في حالة حدوث أي خطأ
                 userPoints += cost;
                 await updateDoc(doc(db, "users", currentUser.uid), { points: userPoints });
                 document.getElementById('ptsSpan').innerText = userPoints;
