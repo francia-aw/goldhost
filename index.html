@@ -32,7 +32,7 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         
         h1, h2 { color: var(--text-main); margin-top: 0; } p { color: var(--text-muted); line-height: 1.6; }
-        textarea, input, select { width: 100%; background: rgba(0, 0, 0, 0.5); border: 1px solid var(--glass-border); color: var(--text-main); font-family: 'Tajawal', sans-serif; padding: 18px; border-radius: 15px; margin-bottom: 25px; font-size: 16px; transition: all 0.3s; box-sizing: border-box;}
+        textarea, input, select { width: 100%; background: rgba(0, 0, 0, 0.5); border: 1px solid var(--glass-border); color: var(--text-main); font-family: 'Tajawal', sans-serif; padding: 18px; border-radius: 15px; margin-bottom: 20px; font-size: 16px; transition: all 0.3s; box-sizing: border-box;}
         select option { background: #161722; color: #fff; padding: 10px; }
         textarea:focus, input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
         
@@ -94,18 +94,33 @@
                 <option value="gpt-4o" data-type="text" data-cost="50">GPT-4o (التكلفة: 50 نقطة)</option>
                 <option value="claude-3-5-sonnet" data-type="text" data-cost="100">Claude 3.5 Sonnet (التكلفة: 100 نقطة)</option>
             </optgroup>
-            <optgroup label="توليد الصور (مبني على توثيق Kie.ai)">
+            <optgroup label="توليد الصور (جودة فائقة)">
                 <option value="grok-imagine/text-to-image" data-type="media" data-cost="150">Grok Imagine (التكلفة: 150 نقطة)</option>
                 <option value="flux" data-type="media" data-cost="120">Flux (التكلفة: 120 نقطة)</option>
                 <option value="midjourney" data-type="media" data-cost="200">Midjourney (التكلفة: 200 نقطة)</option>
             </optgroup>
-            <optgroup label="توليد الفيديو">
+            <optgroup label="توليد الفيديو السينمائي">
                 <option value="kling-video" data-type="media" data-cost="800">Kling Video (التكلفة: 800 نقطة)</option>
                 <option value="runway-gen3" data-type="media" data-cost="1000">Runway Gen-3 (التكلفة: 1000 نقطة)</option>
             </optgroup>
         </select>
 
         <textarea id="aiInput" rows="5" placeholder="اكتب وصفك هنا بدقة... (ملاحظة: الصور والفيديو تتطلب وصفاً باللغة الإنجليزية لأفضل نتيجة)"></textarea>
+        
+        <!-- اختيار المقاس الجديد للصور والفيديو -->
+        <div style="display: flex; gap: 15px; margin-bottom: 25px;">
+            <div style="flex: 1;">
+                <label style="color: var(--accent); font-weight: bold; margin-bottom: 10px; display: block;"><i class="fa-solid fa-crop-simple"></i> المقاس (للصور والفيديو):</label>
+                <select id="aspectRatioSelector" style="margin-bottom: 0;">
+                    <option value="1:1">مربع (1:1) - إنستجرام</option>
+                    <option value="16:9">أفقي (16:9) - يوتيوب ولاب توب</option>
+                    <option value="9:16">رأسي (9:16) - تيك توك وريلز</option>
+                    <option value="3:2">أفقي عريض (3:2) - تصوير فوتوغرافي</option>
+                    <option value="2:3">رأسي طويل (2:3) - بورتريه</option>
+                </select>
+            </div>
+        </div>
+
         <button id="submitBtn" class="action-btn" onclick="generateAI()">تنفيذ الطلب <i class="fa-solid fa-wand-sparkles" style="margin-right: 8px;"></i></button>
         
         <div id="aiOutput">
@@ -115,6 +130,7 @@
         </div>
     </div>
 
+    <!-- الأسعار والدفع -->
     <div id="pricingPage" class="container page">
         <h2 style="text-align: center; margin-bottom: 40px; font-weight: 900;">باقات الشحن</h2>
         <div class="plans-grid">
@@ -134,6 +150,7 @@
         </div>
     </div>
 
+    <!-- الإدارة -->
     <div id="adminPage" class="container page">
         <div id="adminLogin" style="text-align: center;">
             <i class="fa-solid fa-shield-dog" style="font-size: 70px; color: #ff5252; margin-bottom: 25px;"></i>
@@ -150,6 +167,7 @@
         </div>
     </div>
 
+    <!-- Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-auth.js";
@@ -254,6 +272,9 @@
             const modelType = selectedOption.getAttribute('data-type'); 
             const cost = parseInt(selectedOption.getAttribute('data-cost'));
             const promptText = document.getElementById('aiInput').value;
+            
+            // قراءة المقاس الذي اختاره المستخدم
+            const aspectRatio = document.getElementById('aspectRatioSelector').value;
 
             if (userPoints < cost) return alert("❌ رصيدك لا يكفي.");
             if (!promptText.trim()) return alert("⚠️ اكتب وصف للطلب.");
@@ -264,6 +285,7 @@
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> جاري الإنشاء...';
             
+            // خصم النقاط مؤقتاً
             userPoints -= cost;
             document.getElementById('ptsSpan').innerText = userPoints;
             await updateDoc(doc(db, "users", currentUser.uid), { points: userPoints });
@@ -297,11 +319,12 @@
 
                     const createEndpoint = "https://api.kie.ai/api/v1/jobs/createTask";
                     
-                    // الإصلاح السحري: تغليف الوصف داخل input حسب طلب السيرفر (Error 422)
+                    // إضافة المقاس (Aspect Ratio) بداخل الـ input
                     const payload = { 
                         model: modelId, 
                         input: {
-                            prompt: promptText 
+                            prompt: promptText,
+                            aspect_ratio: aspectRatio // إضافة المقاس المطلوب
                         }
                     };
 
@@ -351,9 +374,9 @@
                                     
                                     setTimeout(() => {
                                         if(modelId.includes('video') || finalUrl.toLowerCase().match(/\.(mp4|webm|mov)$/)) {
-                                            output.innerHTML = `<video controls autoplay loop src="${finalUrl}"></video><br><div style="text-align:center; margin-top:10px;"><a href="${finalUrl}" target="_blank" class="btn-google" style="display:inline-flex; width:auto;"><i class="fa-solid fa-cloud-arrow-down" style="margin-right:5px;"></i> تحميل الفيديو</a></div>`;
+                                            output.innerHTML = `<video controls autoplay loop src="${finalUrl}" style="max-width: 100%; height: auto;"></video><br><div style="text-align:center; margin-top:10px;"><a href="${finalUrl}" target="_blank" class="btn-google" style="display:inline-flex; width:auto;"><i class="fa-solid fa-cloud-arrow-down" style="margin-right:5px;"></i> تحميل الفيديو</a></div>`;
                                         } else {
-                                            output.innerHTML = `<img src="${finalUrl}" alt="Generated Media"><br><div style="text-align:center; margin-top:10px;"><a href="${finalUrl}" target="_blank" class="btn-google" style="display:inline-flex; width:auto;"><i class="fa-solid fa-download" style="margin-right:5px;"></i> تحميل الصورة</a></div>`;
+                                            output.innerHTML = `<img src="${finalUrl}" alt="Generated Media" style="max-width: 100%; height: auto;"><br><div style="text-align:center; margin-top:10px;"><a href="${finalUrl}" target="_blank" class="btn-google" style="display:inline-flex; width:auto;"><i class="fa-solid fa-download" style="margin-right:5px;"></i> تحميل الصورة</a></div>`;
                                         }
                                     }, 1000);
                                 } else {
