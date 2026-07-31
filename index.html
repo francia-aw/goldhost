@@ -82,7 +82,7 @@
         <div style="text-align: center; padding: 50px 0;">
             <i class="fa-brands fa-space-awesome" style="font-size: 110px; color: var(--accent); margin-bottom: 30px; text-shadow: 0 0 40px var(--accent-glow);"></i>
             <h1 style="font-size: 50px; margin-bottom: 20px; font-weight: 900;">مستقبلك يبدأ هنا</h1>
-            <p style="font-size: 22px; max-width: 650px; margin: 0 auto; color: #ccc;">سجل دخولك الان واستمتع بأقوى نماذج الذكاء الاصطناعي (النصوص، الصور، والفيديو).</p>
+            <p style="font-size: 22px; max-width: 650px; margin: 0 auto; color: #ccc;">سجل دخولك الان واستمتع بأقوى نماذج الذكاء الاصطناعي (النصوص، الصور، والفيديو) بنظامنا المحدث الجديد.</p>
         </div>
     </div>
 
@@ -90,25 +90,26 @@
         <h2><i class="fa-solid fa-clapperboard"></i> إستوديو الإنشاء</h2>
         
         <select id="modelSelector">
-            <optgroup label="نصوص (Kie Unified API)">
-                <!-- تم تصحيح الأسماء لتطابق التوثيق الرسمي gpt-x.x-codex -->
-                <option value="gpt-5.4-codex" data-type="text" data-cost="50">GPT 5.4 Codex (التكلفة: 50 نقطة)</option>
-                <option value="gpt-5.5-codex" data-type="text" data-cost="75">GPT 5.5 Codex (التكلفة: 75 نقطة)</option>
+            <optgroup label="محادثة ونصوص (سريع وموثوق)">
+                <option value="gpt-4o" data-type="text" data-cost="50">GPT-4o (التكلفة: 50 نقطة)</option>
+                <option value="claude-3-haiku" data-type="text" data-cost="30">Claude 3 Haiku (التكلفة: 30 نقطة)</option>
             </optgroup>
-            <optgroup label="توليد الصور">
-                <option value="dall-e-3" data-type="image" data-cost="150">DALL-E 3 (التكلفة: 150 نقطة)</option>
+            <optgroup label="توليد الصور (مهام مخصصة)">
+                <option value="bytedance/seedream" data-type="media" data-cost="100">Seedream Image (التكلفة: 100 نقطة)</option>
+                <option value="flux/kontext" data-type="media" data-cost="120">Flux Image (التكلفة: 120 نقطة)</option>
             </optgroup>
-            <optgroup label="توليد فيديو">
-                <option value="kling-2.1" data-type="video" data-cost="800">Kling 2.1 (التكلفة: 800 نقطة)</option>
+            <optgroup label="توليد الفيديو السينمائي">
+                <option value="kling-3.0/video" data-type="media" data-cost="500">Kling 3.0 Video (التكلفة: 500 نقطة)</option>
+                <option value="runway/generate" data-type="media" data-cost="800">Runway Video (التكلفة: 800 نقطة)</option>
             </optgroup>
         </select>
 
-        <textarea id="aiInput" rows="5" placeholder="اكتب وصفك هنا بدقة..."></textarea>
+        <textarea id="aiInput" rows="5" placeholder="اكتب وصفك هنا بدقة... (ملاحظة: الصور والفيديو تتطلب وصفاً باللغة الإنجليزية لأفضل نتيجة)"></textarea>
         <button id="submitBtn" class="action-btn" onclick="generateAI()">تنفيذ الطلب <i class="fa-solid fa-wand-sparkles" style="margin-right: 8px;"></i></button>
         
         <div id="aiOutput">
             <div style="text-align: center; color: var(--text-muted); margin-top: 20px;">
-                <i class="fa-solid fa-layer-group" style="font-size: 40px; margin-bottom: 15px;"></i><br>مساحة العرض...
+                <i class="fa-solid fa-layer-group" style="font-size: 40px; margin-bottom: 15px;"></i><br>مساحة العرض الخاصة بك...
             </div>
         </div>
     </div>
@@ -250,7 +251,7 @@
             const selector = document.getElementById('modelSelector');
             const selectedOption = selector.options[selector.selectedIndex];
             const modelId = selectedOption.value;
-            const modelType = selectedOption.getAttribute('data-type');
+            const modelType = selectedOption.getAttribute('data-type'); // إما "text" أو "media" للصور والفيديو
             const cost = parseInt(selectedOption.getAttribute('data-cost'));
             const promptText = document.getElementById('aiInput').value;
 
@@ -263,131 +264,120 @@
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> جاري الإنشاء...';
             
+            // خصم النقاط مؤقتاً
             userPoints -= cost;
             document.getElementById('ptsSpan').innerText = userPoints;
             await updateDoc(doc(db, "users", currentUser.uid), { points: userPoints });
 
             try {
-                if (modelType === "text" || modelType === "image") {
+                // ================== مسار النصوص ==================
+                if (modelType === "text") {
                     output.innerHTML = '<div style="text-align:center; padding: 20px;"><i class="fa-solid fa-atom fa-spin" style="font-size:50px; color:var(--primary); margin-bottom:15px;"></i><br><span style="color:var(--accent);">جاري المعالجة...</span></div>';
                     
-                    // التحديث الجذري: استخدام الرابط الموحد الصحيح لنماذج Kie.ai وتعديل Payload
-                    let endpoint = "";
-                    let payload = {};
-
-                    if (modelType === "text") {
-                        // استخدام Unified API endpoint
-                        endpoint = "https://api.kie.ai/api/v1/responses";
-                        payload = {
-                            model: modelId,
-                            stream: false,
-                            input: [
-                                {
-                                    role: "user",
-                                    content: [
-                                        { type: "input_text", text: promptText }
-                                    ]
-                                }
-                            ]
-                        };
-                    } else if (modelType === "image") {
-                        endpoint = "https://api.kie.ai/v1/images/generations";
-                        payload = { model: modelId, prompt: promptText, n: 1 };
-                    }
+                    // استخدام مسار OpenAI القياسي اللي شغال ومضمون للنصوص
+                    const endpoint = "https://api.kie.ai/v1/chat/completions";
+                    const payload = { model: modelId, messages: [{ role: "user", content: promptText }] };
 
                     const res = await fetch(endpoint, {
                         method: "POST",
-                        headers: { 
-                            "Content-Type": "application/json", 
-                            "Authorization": `Bearer ${KIE_API_KEY}` 
-                        },
+                        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${KIE_API_KEY}` },
                         body: JSON.stringify(payload)
                     });
                     
                     const data = await res.json();
+                    if (data.error) throw new Error(data.error.message || data.error.code);
 
-                    if (data.error) throw new Error(data.error.message || data.error.code || "رفض من السيرفر");
-
-                    if (modelType === "text") {
-                        // استخراج النص من Unified Response Format
-                        let responseText = "";
-                        
-                        if (data.output && Array.isArray(data.output)) {
-                            const msgItem = data.output.find(item => item.type === "message");
-                            if (msgItem && msgItem.content && msgItem.content[0]) {
-                                responseText = msgItem.content[0].text || msgItem.content[0].content;
-                            } else {
-                                responseText = msgItem ? msgItem.text : JSON.stringify(data.output, null, 2);
-                            }
-                        } else if (data.choices && data.choices[0] && data.choices[0].message) {
-                            responseText = data.choices[0].message.content; // Backup Standard OpenAI
-                        }
-
-                        if (responseText) {
-                            output.innerHTML = responseText.replace(/\n/g, '<br>');
-                        } else {
-                            output.innerHTML = `<div style="text-align:left; direction:ltr; background:#111; padding:15px; border-radius:10px;"><strong style="color:var(--accent);">Raw Output:</strong><br><pre style="color:#0f0; font-size:14px; white-space:pre-wrap;">${JSON.stringify(data, null, 2)}</pre></div>`;
-                        }
-                    } else if (modelType === "image") {
-                        if (data.data && data.data[0] && data.data[0].url) {
-                            output.innerHTML = `<img src="${data.data[0].url}" alt="AI Image"><br><div style="text-align:center; margin-top:15px;"><a href="${data.data[0].url}" target="_blank" class="btn-google" style="display:inline-flex; width:auto; text-decoration:none;">تحميل الصورة</a></div>`;
-                        } else {
-                            throw new Error("لم يتم العثور على رابط الصورة.");
-                        }
+                    if (data.choices && data.choices[0] && data.choices[0].message) {
+                        output.innerHTML = data.choices[0].message.content.replace(/\n/g, '<br>');
+                    } else {
+                        output.innerHTML = `<pre style="text-align:left; color:#0f0;">${JSON.stringify(data, null, 2)}</pre>`;
                     }
 
-                } else if (modelType === "video") {
-                    // كود الفيديو (نفس النظام)
-                    output.innerHTML = `<div class="progress-container"><div class="progress-title"><i class="fa-solid fa-film fa-bounce"></i> إخراج الفيديو...</div><div class="progress-bar-bg"><div id="vidProgressFill" class="progress-bar-fill"></div></div><div id="vidProgressText" class="progress-text">0%</div></div>`;
+                // ================== مسار المهام (الصور والفيديو) ==================
+                } else if (modelType === "media") {
+                    
+                    output.innerHTML = `<div class="progress-container"><div class="progress-title"><i class="fa-solid fa-film fa-bounce"></i> جاري إنتاج الميديا (صورة/فيديو)...</div><div class="progress-bar-bg"><div id="vidProgressFill" class="progress-bar-fill"></div></div><div id="vidProgressText" class="progress-text">0%</div></div>`;
 
-                    const startRes = await fetch("https://api.kie.ai/v1/videos/generations", {
+                    // المسار الموحد لإنشاء مهام الصور والفيديو في نظام Kie.ai الجديد
+                    const createEndpoint = "https://api.kie.ai/api/v1/jobs/createTask";
+                    const payload = { model: modelId, input: { prompt: promptText } };
+
+                    const startRes = await fetch(createEndpoint, {
                         method: "POST",
                         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${KIE_API_KEY}` },
-                        body: JSON.stringify({ model: modelId, prompt: promptText })
+                        body: JSON.stringify(payload)
                     });
+                    
                     const startData = await startRes.json();
                     
-                    if (startData.error) throw new Error(startData.error.message);
-                    const taskId = startData.id || startData.task_id;
+                    if (startData.error) throw new Error(startData.error.message || "فشل بدء مهمة الميديا. تأكد من اسم الموديل.");
+                    
+                    // استخراج الـ Task ID للمتابعة
+                    const taskId = startData.data?.taskId || startData.taskId || startData.id;
+                    if(!taskId) throw new Error("السيرفر لم يرسل رقم مهمة (Task ID Missing)");
 
+                    // نظام الكشف المستمر (Polling) عن حالة المهمة
                     let fakeProgress = 0;
                     const checkStatus = async () => {
                         try {
-                            const statRes = await fetch(`https://api.kie.ai/v1/videos/generations/${taskId}`, {
+                            const statRes = await fetch(`https://api.kie.ai/api/v1/jobs/recordInfo?taskId=${taskId}`, {
+                                method: "GET",
                                 headers: { "Authorization": `Bearer ${KIE_API_KEY}` }
                             });
+                            
                             const statData = await statRes.json();
+                            const taskData = statData.data || statData; // للتوافق مع استجابات السيرفر المتعددة
 
+                            if (taskData.error) throw new Error(taskData.error.message);
+
+                            // زيادة العداد الوهمي لعدم شعور المستخدم بالملل
                             if(fakeProgress < 92) fakeProgress += Math.floor(Math.random() * 4) + 1;
-                            let currentProgress = statData.progress || fakeProgress;
-                            if(currentProgress > 95 && statData.status !== "completed") currentProgress = 95;
+                            let currentProgress = taskData.progress || fakeProgress;
+                            if(currentProgress > 95 && taskData.successFlag !== 1) currentProgress = 95;
 
                             document.getElementById('vidProgressFill').style.width = `${currentProgress}%`;
                             document.getElementById('vidProgressText').innerText = `${currentProgress}%`;
 
-                            if (statData.status === "completed" || statData.url) {
-                                const videoUrl = statData.url || (statData.data && statData.data[0].url);
-                                document.getElementById('vidProgressFill').style.width = `100%`;
-                                document.getElementById('vidProgressText').innerText = `100%`;
-                                setTimeout(() => {
-                                    output.innerHTML = `<video controls autoplay loop src="${videoUrl}"></video><br><a href="${videoUrl}" target="_blank" class="btn-google" style="display:inline-flex;">تحميل الفيديو</a>`;
-                                }, 1500);
-                            } else if (statData.status === "failed") {
-                                throw new Error("فشل الرندر في السيرفر!");
+                            // successFlag: 1 يعني المهمة تمت بنجاح
+                            if (taskData.successFlag === 1 || taskData.status === "success") {
+                                
+                                // استخراج الرابط أياً كان مسماه
+                                const mediaUrl = taskData.url || taskData.videoUrl || taskData.imageUrl;
+                                
+                                if (mediaUrl) {
+                                    document.getElementById('vidProgressFill').style.width = `100%`;
+                                    document.getElementById('vidProgressText').innerText = `100%`;
+                                    
+                                    setTimeout(() => {
+                                        // معرفة نوع الملف بناءً على الرابط
+                                        if(mediaUrl.toLowerCase().match(/\.(mp4|webm)$/)) {
+                                            output.innerHTML = `<video controls autoplay loop src="${mediaUrl}"></video><br><div style="text-align:center; margin-top:10px;"><a href="${mediaUrl}" target="_blank" class="btn-google" style="display:inline-flex; width:auto;"><i class="fa-solid fa-cloud-arrow-down" style="margin-right:5px;"></i> تحميل الفيديو</a></div>`;
+                                        } else {
+                                            output.innerHTML = `<img src="${mediaUrl}" alt="Generated Media"><br><div style="text-align:center; margin-top:10px;"><a href="${mediaUrl}" target="_blank" class="btn-google" style="display:inline-flex; width:auto;"><i class="fa-solid fa-download" style="margin-right:5px;"></i> تحميل الصورة</a></div>`;
+                                        }
+                                    }, 1000);
+                                } else {
+                                    throw new Error("المهمة اكتملت ولكن لم يتم العثور على رابط الملف.");
+                                }
+                            } else if (taskData.successFlag === 2 || taskData.successFlag === 3) {
+                                throw new Error("فشل الرندر (الإنتاج) في السيرفر! تم إرجاع الرصيد.");
                             } else {
-                                setTimeout(checkStatus, 6000);
+                                // إعادة الكشف بعد 5 ثواني
+                                setTimeout(checkStatus, 5000);
                             }
                         } catch (e) {
                             throw e;
                         }
                     };
-                    setTimeout(checkStatus, 6000);
+                    // بدء الكشف
+                    setTimeout(checkStatus, 5000);
                 }
 
             } catch (error) {
                 console.error("System Error:", error);
                 output.innerHTML = `<div style="background:rgba(255,82,82,0.1); border: 1px solid #ff5252; padding:20px; border-radius:15px; color:#ff5252; text-align:center;"><i class="fa-solid fa-triangle-exclamation" style="font-size:40px; margin-bottom:10px;"></i><br><b style="font-size:20px;">عذراً، حدث خطأ:</b><br><span style="color:#e0e0e0; font-size:15px;">${error.message}</span></div>`;
                 
+                // استرجاع الكوينات بأمان في حالة حدوث أي خطأ
                 userPoints += cost;
                 await updateDoc(doc(db, "users", currentUser.uid), { points: userPoints });
                 document.getElementById('ptsSpan').innerText = userPoints;
