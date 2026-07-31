@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Hub - منصة الذكاء الاصطناعي الشاملة</title>
+    <!-- استدعاء خطوط وأيقونات احترافية -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* ================= التصميم والستايل ================= */
         :root {
             --primary: #8a2be2; --primary-hover: #9b4dca; --accent: #00d2ff; --accent-glow: rgba(0, 210, 255, 0.5);
             --bg-gradient: linear-gradient(135deg, #0a0a0f 0%, #12131c 100%);
@@ -15,6 +17,8 @@
             --text-main: #f0f0f0; --text-muted: #a0a0b0;
         }
         body { font-family: 'Tajawal', sans-serif; background: var(--bg-gradient); color: var(--text-main); margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        /* شريط التنقل */
         header { background: rgba(10, 10, 15, 0.85); backdrop-filter: blur(15px); border-bottom: 1px solid var(--glass-border); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
         .logo { display: flex; align-items: center; gap: 15px; }
         .logo h2 { margin: 0; font-weight: 900; background: linear-gradient(90deg, var(--accent), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -23,34 +27,37 @@
         nav button:hover, nav button.active-nav { color: var(--text-main); background: rgba(255,255,255,0.1); box-shadow: 0 0 15px rgba(255,255,255,0.05); }
         .btn-google { background: #ffffff; color: #1a1a1a; border-radius: 25px; padding: 10px 25px; display: flex; align-items: center; gap: 10px; font-weight: 900;}
         .btn-google:hover { background: #e0e0e0; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.2); }
+        
+        /* الحاويات */
         .container { flex: 1; max-width: 900px; margin: 40px auto; width: 90%; background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 40px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); }
         .page { display: none; animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* العناصر الداخلية */
         h1, h2 { color: var(--text-main); margin-top: 0; } p { color: var(--text-muted); line-height: 1.6; }
         textarea, input, select { width: 100%; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--glass-border); color: var(--text-main); font-family: 'Tajawal', sans-serif; padding: 18px; border-radius: 15px; margin-bottom: 25px; box-sizing: border-box; font-size: 16px; transition: all 0.3s; }
         select option { background: #12131c; color: #fff; padding: 10px; }
         textarea:focus, input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+        
         .action-btn { background: linear-gradient(45deg, var(--primary), var(--accent)); color: white; border: none; padding: 18px 30px; border-radius: 15px; font-size: 18px; font-weight: 900; cursor: pointer; width: 100%; transition: all 0.4s; box-shadow: 0 5px 20px rgba(0, 210, 255, 0.3); text-transform: uppercase; }
-        .action-btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 30px rgba(0, 210, 255, 0.5); letter-spacing: 1px; }
+        .action-btn:hover:not(:disabled) { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 30px rgba(0, 210, 255, 0.5); letter-spacing: 1px; }
+        .action-btn:disabled { background: #555; cursor: not-allowed; box-shadow: none; transform: none; }
         
-        /* قسم الإخراج والتحميل الجديد (الشكل الجامد) */
-        #aiOutput { margin-top: 35px; padding: 30px; background: rgba(0, 0, 0, 0.5); border-radius: 20px; border: 1px solid var(--glass-border); min-height: 100px; line-height: 1.8; font-size: 17px; text-align: center; position: relative; overflow: hidden; }
+        /* شاشة العرض والتحميل */
+        #aiOutput { margin-top: 35px; padding: 30px; background: rgba(0, 0, 0, 0.5); border-radius: 20px; border: 1px solid var(--glass-border); min-height: 100px; line-height: 1.8; font-size: 17px; text-align: center; position: relative; overflow: hidden; white-space: pre-wrap; }
         #aiOutput img { max-width: 100%; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--glass-border); }
-        
-        /* مشغل الفيديو */
         #aiOutput video { width: 100%; border-radius: 15px; box-shadow: 0 0 40px rgba(138, 43, 226, 0.4); border: 2px solid var(--primary); background: #000; }
         
-        /* شريط التحميل (Progress Bar) */
         .progress-container { background: rgba(0,0,0,0.6); padding: 25px; border-radius: 15px; border: 1px solid var(--accent); box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
         .progress-title { color: var(--accent); font-weight: 900; margin-bottom: 15px; font-size: 18px; text-shadow: 0 0 10px var(--accent-glow); }
         .progress-bar-bg { width: 100%; background: #222; border-radius: 10px; height: 20px; overflow: hidden; position: relative; border: 1px solid #444; }
         .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); width: 0%; transition: width 0.4s ease; border-radius: 10px; position: relative; overflow: hidden; }
-        /* تأثير اللمعان جوا شريط التحميل */
         .progress-bar-fill::after { content: ""; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shimmer 1.5s infinite; }
         @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
         .progress-text { font-size: 24px; font-weight: 900; color: white; margin-top: 15px; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
 
+        /* الكروت والديسكورد */
         .plans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 30px; }
         .plan-card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); padding: 30px; border-radius: 20px; text-align: center; transition: transform 0.3s; }
         .plan-card:hover { transform: translateY(-10px); background: rgba(255, 255, 255, 0.05); }
@@ -58,83 +65,90 @@
         .discord-box { background: linear-gradient(135deg, #5865F2, #4752C4); padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 15px 40px rgba(88, 101, 242, 0.4); position: relative; overflow: hidden; }
         .discord-box::before { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%); }
         .discord-box i { font-size: 50px; margin-bottom: 20px; color: white; }
-        #adminPanel { border: 1px solid #ff5252; background: rgba(255, 82, 82, 0.05); padding: 30px; border-radius: 15px; margin-top: 20px; }
     </style>
 </head>
 <body>
 
+    <!-- ================= القائمة العلوية ================= -->
     <header>
         <div class="logo">
             <i class="fa-solid fa-microchip" style="color: var(--accent); font-size: 26px;"></i>
             <h2>AI Hub</h2>
             <div class="balance-badge" id="userBalanceDisplay" style="display:none;">
-                <i class="fa-solid fa-coins"></i> <span id="ptsSpan">0</span>
+                <i class="fa-solid fa-coins"></i> <span id="ptsSpan">0</span> نقطة
             </div>
         </div>
         <nav>
             <button onclick="showPage('homePage')" class="active-nav"><i class="fa-solid fa-house"></i> الرئيسية</button>
             <button onclick="showPage('aiPage')" id="navAi" style="display:none;"><i class="fa-solid fa-wand-magic-sparkles"></i> الإستوديو</button>
-            <button onclick="showPage('pricingPage')"><i class="fa-solid fa-cart-shopping"></i> الأسعار</button>
+            <button onclick="showPage('pricingPage')"><i class="fa-solid fa-cart-shopping"></i> الباقات</button>
             <button onclick="showPage('adminPage')" id="navAdmin" style="display:none; color:#ff5252;"><i class="fa-solid fa-shield-halved"></i> الإدارة</button>
             <button id="loginBtn" class="btn-google"><i class="fa-brands fa-google"></i> تسجيل الدخول</button>
         </nav>
     </header>
 
+    <!-- ================= الصفحة الرئيسية ================= -->
     <div id="homePage" class="container page active">
         <div style="text-align: center; padding: 50px 0;">
             <i class="fa-brands fa-space-awesome" style="font-size: 100px; color: var(--accent); margin-bottom: 30px; text-shadow: 0 0 30px var(--accent-glow);"></i>
             <h1 style="font-size: 45px; margin-bottom: 15px; font-weight: 900;">مستقبلك يبدأ هنا</h1>
-            <p style="font-size: 20px; max-width: 600px; margin: 0 auto; color: #ccc;">سجل دخولك الآن واستمتع بأقوى نماذج الذكاء الاصطناعي لتوليد النصوص، الصور، والفيديوهات السينمائية بضغطة زر.</p>
+            <p style="font-size: 20px; max-width: 600px; margin: 0 auto; color: #ccc;">سجل دخولك الآن واستمتع بأقوى نماذج الذكاء الاصطناعي لتوليد النصوص، الصور، والفيديوهات السينمائية بضغطة زر وبخصومات حصرية.</p>
         </div>
     </div>
 
-    <!-- الإستوديو (الأداة) -->
+    <!-- ================= إستوديو الذكاء الاصطناعي (الأداة) ================= -->
     <div id="aiPage" class="container page">
         <h2><i class="fa-solid fa-clapperboard"></i> إستوديو الإنشاء</h2>
         
+        <!-- القائمة المنسدلة للنماذج -->
         <select id="modelSelector">
-            <optgroup label="نصوص ومحادثة">
-                <option value="gpt-3.5-turbo" data-type="text" data-cost="50">GPT-3.5 (التكلفة: 50 نقطة)</option>
-                <option value="claude-3-haiku" data-type="text" data-cost="75">Claude 3 (التكلفة: 75 نقطة)</option>
+            <optgroup label="نماذج النصوص (محدثة حسب Kie.ai)">
+                <option value="GPT 5.4" data-type="text" data-cost="50">محادثة ومهام: GPT 5.4 (التكلفة: 50 نقطة)</option>
+                <option value="GPT 5.5" data-type="text" data-cost="75">محادثة ومهام: GPT 5.5 (التكلفة: 75 نقطة)</option>
+                <option value="claude-3-haiku" data-type="text" data-cost="75">محادثة سريعة: Claude 3 (التكلفة: 75 نقطة)</option>
             </optgroup>
-            <optgroup label="توليد صور">
-                <option value="dall-e-3" data-type="image" data-cost="150">DALL-E 3 للصور (التكلفة: 150 نقطة)</option>
-                <option value="midjourney" data-type="image" data-cost="200">Midjourney للصور (التكلفة: 200 نقطة)</option>
+            <optgroup label="توليد الصور والفن البصري">
+                <option value="dall-e-3" data-type="image" data-cost="150">توليد صور: DALL-E 3 (التكلفة: 150 نقطة)</option>
+                <option value="midjourney" data-type="image" data-cost="200">توليد صور: Midjourney (التكلفة: 200 نقطة)</option>
             </optgroup>
-            <optgroup label="توليد فيديو سينمائي">
-                <option value="kling-2.1" data-type="video" data-cost="800">Kling 2.1 - فيديو (التكلفة: 800 نقطة)</option>
-                <option value="luma-dream-machine" data-type="video" data-cost="1000">Luma Dream - فيديو (التكلفة: 1000 نقطة)</option>
+            <optgroup label="توليد الفيديو السينمائي">
+                <option value="kling-2.1" data-type="video" data-cost="800">فيديو قياسي: Kling 2.1 (التكلفة: 800 نقطة)</option>
+                <option value="luma-dream-machine" data-type="video" data-cost="1000">فيديو احترافي: Luma Dream (التكلفة: 1000 نقطة)</option>
             </optgroup>
         </select>
 
-        <textarea id="aiInput" rows="5" placeholder="اكتب وصفاً مفصلاً لما تريده هنا... (يفضل باللغة الإنجليزية للصور والفيديو)"></textarea>
+        <textarea id="aiInput" rows="5" placeholder="اكتب وصفاً مفصلاً لطلبك هنا... (يُفضل استخدام الإنجليزية لنتائج أدق في الصور والفيديو)"></textarea>
         <button id="submitBtn" class="action-btn" onclick="generateAI()">ابدأ السحر <i class="fa-solid fa-rocket" style="margin-right: 8px;"></i></button>
         
         <div id="aiOutput">
-            <span style="color: var(--text-muted);"><i class="fa-solid fa-layer-group"></i> مساحة العرض الخاصة بك...</span>
+            <span style="color: var(--text-muted);"><i class="fa-solid fa-layer-group"></i> مساحة العرض الخاصة بك (النتائج ستظهر هنا)...</span>
         </div>
     </div>
 
+    <!-- ================= صفحة الأسعار والدفع ================= -->
     <div id="pricingPage" class="container page">
         <h2 style="text-align: center; margin-bottom: 40px; font-weight: 900;">اختر باقتك</h2>
         <div class="plans-grid">
             <div class="plan-card">
                 <h3>5$</h3>
                 <p style="font-size: 24px; font-weight: 900; color: white;">5,000 نقطة</p>
+                <p style="color:#aaa;">باقة الانطلاق</p>
             </div>
             <div class="plan-card" style="border-color: var(--accent); background: rgba(0, 210, 255, 0.05); box-shadow: 0 0 30px rgba(0,210,255,0.1);">
                 <h3 style="color: var(--accent);">30$</h3>
                 <p style="font-size: 24px; font-weight: 900; color: white;">25,000 نقطة</p>
+                <p style="color:#aaa;">باقة المحترفين (الأكثر طلباً)</p>
             </div>
         </div>
         <div class="discord-box">
             <i class="fa-brands fa-discord"></i>
-            <h2>تفعيل الباقات والشحن</h2>
+            <h2>شحن الرصيد والدعم الفني</h2>
             <h1 style="margin: 20px 0; font-family: monospace; letter-spacing: 3px; font-size: 35px; color: #fff;">kareem067468</h1>
-            <p style="color: #e0e0e0; margin: 0; font-size: 16px;">تواصل مع الدعم الفني عبر ديسكورد لإتمام الدفع وإضافة الرصيد فوراً.</p>
+            <p style="color: #e0e0e0; margin: 0; font-size: 16px;">لشراء الباقات وتفعيل حسابك، يرجى التواصل مع الإدارة عبر الديسكورد وتزويدنا ببريدك الإلكتروني المسجل.</p>
         </div>
     </div>
 
+    <!-- ================= لوحة تحكم الإدارة ================= -->
     <div id="adminPage" class="container page">
         <div id="adminLogin" style="text-align: center;">
             <i class="fa-solid fa-user-secret" style="font-size: 60px; color: #ff5252; margin-bottom: 20px;"></i>
@@ -142,230 +156,271 @@
             <input type="password" id="adminPin" placeholder="أدخل رمز المرور السري" style="max-width: 300px; margin: 0 auto 20px; display: block; text-align: center;">
             <button class="action-btn" onclick="verifyAdmin()" style="max-width: 300px; background: #ff5252; box-shadow: 0 5px 20px rgba(255,82,82,0.4);">دخول آمن</button>
         </div>
-        <div id="adminPanel" style="display: none;">
+        <div id="adminPanel" style="display: none; border: 1px solid #ff5252; background: rgba(255, 82, 82, 0.05); padding: 30px; border-radius: 15px; margin-top: 20px;">
             <h2 style="color: #ff5252;"><i class="fa-solid fa-battery-full"></i> شحن أرصدة المستخدمين</h2>
-            <input type="email" id="targetEmail" placeholder="البريد الإلكتروني للمستخدم">
+            <input type="email" id="targetEmail" placeholder="البريد الإلكتروني للمستخدم المراد شحنه">
             <input type="number" id="pointsToAdd" placeholder="عدد النقاط المراد إضافتها">
             <button class="action-btn" onclick="addPointsToUser()" style="background: #ff5252; box-shadow: none;">تأكيد الشحن <i class="fa-solid fa-check"></i></button>
             <p id="adminMessage" style="margin-top: 15px; font-weight: bold; font-size: 18px;"></p>
         </div>
     </div>
 
-    <!-- Firebase Scripts -->
+    <!-- ================= الكود البرمجي (Firebase & Logic) ================= -->
     <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyCU0JMGSBti6t8xolgEXSltkOr00aC4naM",
-        authDomain: "goldhost-d3ab7.firebaseapp.com",
-        projectId: "goldhost-d3ab7",
-        storageBucket: "goldhost-d3ab7.firebasestorage.app",
-        messagingSenderId: "662667965975",
-        appId: "1:662667965975:web:e1cf683726961f98158e52"
-    };
+        // إعدادات Firebase الخاصة بك
+        const firebaseConfig = {
+            apiKey: "AIzaSyCU0JMGSBti6t8xolgEXSltkOr00aC4naM",
+            authDomain: "goldhost-d3ab7.firebaseapp.com",
+            projectId: "goldhost-d3ab7",
+            storageBucket: "goldhost-d3ab7.firebasestorage.app",
+            messagingSenderId: "662667965975",
+            appId: "1:662667965975:web:e1cf683726961f98158e52"
+        };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const provider = new GoogleAuthProvider();
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
 
-    let currentUser = null;
-    let userPoints = 0;
-    const ADMIN_EMAIL = "kareemwael0216@gmail.com";
-    const ADMIN_PIN = "K_425422";
-    const KIE_API_KEY = "1cb2291c2c38d8335da071e20ee5bdbc"; 
-
-    window.showPage = (pageId) => {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-nav'));
-        document.getElementById(pageId).classList.add('active');
-        event.currentTarget.classList.add('active-nav');
-    }
-
-    document.getElementById('loginBtn').addEventListener('click', () => {
-        signInWithPopup(auth, provider).catch(error => console.error("Error:", error));
-    });
-
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            currentUser = user;
-            document.getElementById('loginBtn').style.display = 'none';
-            document.getElementById('navAi').style.display = 'inline-block';
-            document.getElementById('userBalanceDisplay').style.display = 'inline-block';
-            
-            const userRef = doc(db, "users", user.uid);
-            const userSnap = await getDoc(userRef);
-            
-            if (userSnap.exists()) {
-                userPoints = userSnap.data().points;
-            } else {
-                await setDoc(userRef, { email: user.email, points: 0 });
-                userPoints = 0;
-            }
-            document.getElementById('ptsSpan').innerText = userPoints;
-            if (user.email === ADMIN_EMAIL) { document.getElementById('navAdmin').style.display = 'inline-block'; }
-        }
-    });
-
-    window.verifyAdmin = () => {
-        const pin = document.getElementById('adminPin').value;
-        if (pin === ADMIN_PIN && currentUser.email === ADMIN_EMAIL) {
-            document.getElementById('adminLogin').style.display = 'none';
-            document.getElementById('adminPanel').style.display = 'block';
-        } else { alert("مرفوض! بيانات غير صحيحة."); }
-    }
-
-    window.addPointsToUser = async () => {
-        const email = document.getElementById('targetEmail').value;
-        const points = parseInt(document.getElementById('pointsToAdd').value);
-        if(!email || !points) return;
-
-        const q = query(collection(db, "users"), where("email", "==", email));
-        const querySnapshot = await getDocs(q);
+        let currentUser = null;
+        let userPoints = 0;
         
-        if (querySnapshot.empty) {
-            document.getElementById('adminMessage').style.color = "#ff5252";
-            document.getElementById('adminMessage').innerText = "❌ المستخدم غير موجود!";
-            return;
+        // بيانات الإدارة
+        const ADMIN_EMAIL = "kareemwael0216@gmail.com";
+        const ADMIN_PIN = "K_425422";
+        const KIE_API_KEY = "1cb2291c2c38d8335da071e20ee5bdbc"; 
+
+        // نظام التنقل بين الصفحات
+        window.showPage = (pageId) => {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-nav'));
+            document.getElementById(pageId).classList.add('active');
+            event.currentTarget.classList.add('active-nav');
         }
 
-        querySnapshot.forEach(async (userDoc) => {
-            const currentPts = userDoc.data().points;
-            await updateDoc(doc(db, "users", userDoc.id), { points: currentPts + points });
-            document.getElementById('adminMessage').style.color = "#00d2ff";
-            document.getElementById('adminMessage').innerText = `✅ تمت إضافة ${points} نقطة لـ ${email}`;
+        // تسجيل الدخول
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            signInWithPopup(auth, provider).catch(error => {
+                console.error("Login Error:", error);
+                alert("حدث خطأ أثناء تسجيل الدخول. تأكد من إعدادات النطاق في فايربيز.");
+            });
         });
-    }
 
-    // دالة الذكاء الاصطناعي المُحسنة (ضد الأخطاء)
-    window.generateAI = async () => {
-        if (!currentUser) return alert("يرجى تسجيل الدخول أولاً");
-        
-        const selector = document.getElementById('modelSelector');
-        const selectedOption = selector.options[selector.selectedIndex];
-        const modelId = selectedOption.value;
-        const modelType = selectedOption.getAttribute('data-type');
-        const cost = parseInt(selectedOption.getAttribute('data-cost'));
-        const promptText = document.getElementById('aiInput').value;
-
-        if (userPoints < cost) return alert("رصيدك غير كافٍ. يرجى الشحن.");
-        if (!promptText) return alert("يرجى كتابة وصف للطلب.");
-
-        const btn = document.getElementById('submitBtn');
-        const output = document.getElementById('aiOutput');
-        
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري المعالجة...';
-        userPoints -= cost;
-        document.getElementById('ptsSpan').innerText = userPoints;
-        await updateDoc(doc(db, "users", currentUser.uid), { points: userPoints });
-
-        try {
-            if (modelType === "text" || modelType === "image") {
-                output.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin" style="font-size:30px; color:var(--accent);"></i><br><br>الذكاء الاصطناعي يفكر...';
+        // مراقبة حالة المستخدم وجلب الرصيد
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('loginBtn').style.display = 'none';
+                document.getElementById('navAi').style.display = 'inline-block';
+                document.getElementById('userBalanceDisplay').style.display = 'inline-block';
                 
-                let endpoint = modelType === "text" ? "https://api.kie.ai/v1/chat/completions" : "https://api.kie.ai/v1/images/generations";
-                let payload = modelType === "text" 
-                    ? { model: modelId, messages: [{ role: "user", content: promptText }] }
-                    : { model: modelId, prompt: promptText, n: 1 };
-
-                const res = await fetch(endpoint, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${KIE_API_KEY}` },
-                    body: JSON.stringify(payload)
-                });
+                const userRef = doc(db, "users", user.uid);
+                const userSnap = await getDoc(userRef);
                 
-                const data = await res.json();
-                
-                // طباعة الاستجابة في الكونسول للمطور
-                console.log("Kie.ai Response:", data);
-
-                // التأكد من عدم وجود رسالة خطأ من السيرفر
-                if (data.error) {
-                    throw new Error(data.error.message || data.error.code || "خطأ مجهول من سيرفر Kie");
+                if (userSnap.exists()) {
+                    userPoints = userSnap.data().points;
+                } else {
+                    await setDoc(userRef, { email: user.email, points: 0 });
+                    userPoints = 0;
                 }
-
-                if (modelType === "text") {
-                    if (!data.choices || !data.choices[0]) throw new Error("لم يتم إرجاع أي نص.");
-                    output.innerText = data.choices[0].message.content;
-                } else if (modelType === "image") {
-                    if (!data.data || !data.data[0]) throw new Error("لم يتم إرجاع أي صورة.");
-                    output.innerHTML = `<img src="${data.data[0].url}">`;
+                document.getElementById('ptsSpan').innerText = userPoints;
+                
+                // إظهار تبويب الإدارة إذا كان الحساب للإدمن
+                if (user.email === ADMIN_EMAIL) { 
+                    document.getElementById('navAdmin').style.display = 'inline-block'; 
                 }
+            }
+        });
 
-            } else if (modelType === "video") {
-                // الكود الخاص بالفيديو (كما هو مسبقاً)
-                output.innerHTML = `
-                    <div class="progress-container">
-                        <div class="progress-title"><i class="fa-solid fa-film fa-bounce"></i> جاري إخراج المشهد السينمائي...</div>
-                        <div class="progress-bar-bg"><div id="vidProgressFill" class="progress-bar-fill"></div></div>
-                        <div id="vidProgressText" class="progress-text">0%</div>
-                        <p style="font-size:14px; color:#aaa; margin-top:10px;">(قد يستغرق توليد الفيديو من دقيقة إلى 3 دقائق)</p>
-                    </div>
-                `;
+        // التحقق من لوحة الإدارة
+        window.verifyAdmin = () => {
+            const pin = document.getElementById('adminPin').value;
+            if (pin === ADMIN_PIN && currentUser.email === ADMIN_EMAIL) {
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+            } else { alert("مرفوض! بيانات غير صحيحة."); }
+        }
 
-                const startRes = await fetch("https://api.kie.ai/v1/videos/generations", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${KIE_API_KEY}` },
-                    body: JSON.stringify({ model: modelId, prompt: promptText })
-                });
-                const startData = await startRes.json();
-                console.log("Kie.ai Video Start Response:", startData);
-                
-                if (startData.error) throw new Error(startData.error.message || "فشل في بدء توليد الفيديو");
-                
-                const taskId = startData.id;
+        // شحن رصيد للمستخدم
+        window.addPointsToUser = async () => {
+            const email = document.getElementById('targetEmail').value;
+            const points = parseInt(document.getElementById('pointsToAdd').value);
+            if(!email || !points) return;
 
-                let fakeProgress = 0;
-                const checkStatus = async () => {
-                    try {
-                        const statRes = await fetch(`https://api.kie.ai/v1/videos/generations/${taskId}`, {
-                            headers: { "Authorization": `Bearer ${KIE_API_KEY}` }
-                        });
-                        const statData = await statRes.json();
-                        
-                        if (statData.error) throw new Error(statData.error.message);
-
-                        if(fakeProgress < 90) { fakeProgress += Math.floor(Math.random() * 5) + 2; }
-                        let currentProgress = statData.progress || fakeProgress;
-                        if(currentProgress > 95 && statData.status !== "completed") currentProgress = 95;
-
-                        document.getElementById('vidProgressFill').style.width = `${currentProgress}%`;
-                        document.getElementById('vidProgressText').innerText = `${currentProgress}%`;
-
-                        if (statData.status === "completed" || statData.url) {
-                            document.getElementById('vidProgressFill').style.width = `100%`;
-                            document.getElementById('vidProgressText').innerText = `100%`;
-                            setTimeout(() => {
-                                output.innerHTML = `<video controls autoplay loop src="${statData.url}"></video><br><a href="${statData.url}" target="_blank" style="color:var(--accent);">تحميل الفيديو</a>`;
-                            }, 1000);
-                        } else if (statData.status === "failed") {
-                            throw new Error("فشل توليد الفيديو من المصدر.");
-                        } else {
-                            setTimeout(checkStatus, 5000);
-                        }
-                    } catch (e) {
-                        throw e;
-                    }
-                };
-                setTimeout(checkStatus, 5000);
+            const q = query(collection(db, "users"), where("email", "==", email));
+            const querySnapshot = await getDocs(q);
+            
+            if (querySnapshot.empty) {
+                document.getElementById('adminMessage').style.color = "#ff5252";
+                document.getElementById('adminMessage').innerText = "❌ المستخدم غير موجود في قاعدة البيانات!";
+                return;
             }
 
-        } catch (error) {
-            console.error(error);
-            output.innerHTML = `<span style="color:#ff5252; font-weight:bold;"><i class="fa-solid fa-triangle-exclamation"></i> حدث خطأ: ${error.message}</span>`;
-            
-            // إرجاع النقاط للمستخدم لأن العملية فشلت
-            userPoints += cost;
-            await updateDoc(doc(db, "users", currentUser.uid), { points: userPoints });
-            document.getElementById('ptsSpan').innerText = userPoints;
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = 'ابدأ السحر <i class="fa-solid fa-rocket" style="margin-right: 8px;"></i>';
+            querySnapshot.forEach(async (userDoc) => {
+                const currentPts = userDoc.data().points;
+                await updateDoc(doc(db, "users", userDoc.id), { points: currentPts + points });
+                document.getElementById('adminMessage').style.color = "#00d2ff";
+                document.getElementById('adminMessage').innerText = `✅ تمت إضافة ${points} نقطة بنجاح إلى ${email}`;
+                
+                // تحديث رصيد الإدمن نفسه إذا كان يشحن لنفسه للتجربة
+                if(email === currentUser.email) {
+                    userPoints += points;
+                    document.getElementById('ptsSpan').innerText = userPoints;
+                }
+            });
         }
-    }
-</script>
+
+        // ================= الدالة الأساسية: التعامل مع ذكاء Kie.ai =================
+        window.generateAI = async () => {
+            if (!currentUser) return alert("يرجى تسجيل الدخول أولاً");
+            
+            const selector = document.getElementById('modelSelector');
+            const selectedOption = selector.options[selector.selectedIndex];
+            const modelId = selectedOption.value;
+            const modelType = selectedOption.getAttribute('data-type');
+            const cost = parseInt(selectedOption.getAttribute('data-cost'));
+            const promptText = document.getElementById('aiInput').value;
+
+            if (userPoints < cost) return alert("رصيدك غير كافٍ لاستخدام هذا النموذج. يرجى شحن حسابك.");
+            if (!promptText) return alert("يرجى كتابة وصف لطلبك أولاً.");
+
+            const btn = document.getElementById('submitBtn');
+            const output = document.getElementById('aiOutput');
+            
+            // قفل الزر وخصم الرصيد مبدئياً
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري المعالجة...';
+            userPoints -= cost;
+            document.getElementById('ptsSpan').innerText = userPoints;
+            await updateDoc(doc(db, "users", currentUser.uid), { points: userPoints });
+
+            try {
+                // 1. معالجة النصوص والصور
+                if (modelType === "text" || modelType === "image") {
+                    output.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin" style="font-size:30px; color:var(--accent);"></i><br><br>الذكاء الاصطناعي يفكر...';
+                    
+                    // تحديد الرابط بناءً على وثائق المنصة التي أرسلتها (النصوص تستخدم codex/v1/responses)
+                    let endpoint = modelType === "text" 
+                        ? "https://api.kie.ai/codex/v1/responses" 
+                        : "https://api.kie.ai/v1/images/generations";
+                        
+                    let payload = modelType === "text" 
+                        ? { model: modelId, messages: [{ role: "user", content: promptText }] }
+                        : { model: modelId, prompt: promptText, n: 1 };
+
+                    const res = await fetch(endpoint, {
+                        method: "POST",
+                        headers: { 
+                            "Content-Type": "application/json", 
+                            "Authorization": `Bearer ${KIE_API_KEY}` 
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    const data = await res.json();
+                    console.log("Kie.ai API Response:", data); // مفيد للمطور في المتصفح
+
+                    if (data.error) throw new Error(data.error.message || data.error.code || "خطأ من سيرفر Kie");
+
+                    // استخراج الرد
+                    if (modelType === "text") {
+                        // قراءة الـ Array الخاص بـ output بناءً على الصورة
+                        if (data.output && Array.isArray(data.output)) {
+                            const messageObj = data.output.find(item => item.type === "message");
+                            if (messageObj && messageObj.text) {
+                                output.innerText = messageObj.text;
+                            } else if (messageObj && messageObj.content) {
+                                output.innerText = messageObj.content;
+                            } else {
+                                output.innerText = JSON.stringify(data.output);
+                            }
+                        } else if (data.choices && data.choices[0]) {
+                            output.innerText = data.choices[0].message.content;
+                        } else {
+                            throw new Error("لم يتم إرجاع أي نص من السيرفر.");
+                        }
+                    } else if (modelType === "image") {
+                        if (!data.data || !data.data[0]) throw new Error("فشل توليد الصورة.");
+                        output.innerHTML = `<img src="${data.data[0].url}">`;
+                    }
+
+                // 2. معالجة الفيديوهات بنظام الكشف (Polling)
+                } else if (modelType === "video") {
+                    output.innerHTML = `
+                        <div class="progress-container">
+                            <div class="progress-title"><i class="fa-solid fa-film fa-bounce"></i> جاري إخراج المشهد السينمائي...</div>
+                            <div class="progress-bar-bg"><div id="vidProgressFill" class="progress-bar-fill"></div></div>
+                            <div id="vidProgressText" class="progress-text">0%</div>
+                            <p style="font-size:14px; color:#aaa; margin-top:10px;">(قد يستغرق توليد الفيديو من دقيقة إلى 3 دقائق)</p>
+                        </div>
+                    `;
+
+                    const startRes = await fetch("https://api.kie.ai/v1/videos/generations", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${KIE_API_KEY}` },
+                        body: JSON.stringify({ model: modelId, prompt: promptText })
+                    });
+                    
+                    const startData = await startRes.json();
+                    if (startData.error) throw new Error(startData.error.message || "فشل في بدء الطلب");
+                    
+                    const taskId = startData.id;
+                    let fakeProgress = 0;
+
+                    const checkStatus = async () => {
+                        try {
+                            const statRes = await fetch(`https://api.kie.ai/v1/videos/generations/${taskId}`, {
+                                headers: { "Authorization": `Bearer ${KIE_API_KEY}` }
+                            });
+                            const statData = await statRes.json();
+                            
+                            if (statData.error) throw new Error(statData.error.message);
+
+                            // زيادة العداد الوهمي إذا لم يتوفر رقم حقيقي من الـ API
+                            if(fakeProgress < 90) { fakeProgress += Math.floor(Math.random() * 5) + 2; }
+                            let currentProgress = statData.progress || fakeProgress;
+                            if(currentProgress > 95 && statData.status !== "completed") currentProgress = 95;
+
+                            document.getElementById('vidProgressFill').style.width = `${currentProgress}%`;
+                            document.getElementById('vidProgressText').innerText = `${currentProgress}%`;
+
+                            if (statData.status === "completed" || statData.url) {
+                                document.getElementById('vidProgressFill').style.width = `100%`;
+                                document.getElementById('vidProgressText').innerText = `100%`;
+                                setTimeout(() => {
+                                    output.innerHTML = `<video controls autoplay loop src="${statData.url}"></video><br><br><a href="${statData.url}" target="_blank" class="btn-google" style="display:inline-flex; width:auto; text-decoration:none;"><i class="fa-solid fa-download"></i> تحميل الفيديو</a>`;
+                                }, 1000);
+                            } else if (statData.status === "failed") {
+                                throw new Error("فشل توليد الفيديو من المصدر.");
+                            } else {
+                                // إعادة الكشف بعد 5 ثواني
+                                setTimeout(checkStatus, 5000);
+                            }
+                        } catch (e) {
+                            throw e;
+                        }
+                    };
+                    setTimeout(checkStatus, 5000);
+                }
+
+            } catch (error) {
+                console.error("System Error:", error);
+                output.innerHTML = `<span style="color:#ff5252; font-weight:bold; font-size:18px;"><i class="fa-solid fa-triangle-exclamation"></i> حدث خطأ: ${error.message}</span>`;
+                
+                // استرجاع الرصيد للمستخدم عند الفشل
+                userPoints += cost;
+                await updateDoc(doc(db, "users", currentUser.uid), { points: userPoints });
+                document.getElementById('ptsSpan').innerText = userPoints;
+            } finally {
+                // تفعيل الزر مجدداً
+                btn.disabled = false;
+                btn.innerHTML = 'ابدأ السحر <i class="fa-solid fa-rocket" style="margin-right: 8px;"></i>';
+            }
+        }
+    </script>
 </body>
 </html>
