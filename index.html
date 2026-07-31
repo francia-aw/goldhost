@@ -150,7 +150,6 @@
         </div>
     </div>
 
-    <!-- Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-auth.js";
@@ -265,7 +264,6 @@
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> جاري الإنشاء...';
             
-            // خصم النقاط مؤقتاً
             userPoints -= cost;
             document.getElementById('ptsSpan').innerText = userPoints;
             await updateDoc(doc(db, "users", currentUser.uid), { points: userPoints });
@@ -292,18 +290,19 @@
                         output.innerHTML = `<pre style="text-align:left; color:#0f0;">${JSON.stringify(data, null, 2)}</pre>`;
                     }
 
-                // ================== مسار المهام (الصور والفيديو) بناءً على الصورة ==================
+                // ================== مسار المهام (الصور والفيديو) ==================
                 } else if (modelType === "media") {
                     
                     output.innerHTML = `<div class="progress-container"><div class="progress-title"><i class="fa-solid fa-layer-group fa-bounce"></i> جاري إنشاء الميديا...</div><div class="progress-bar-bg"><div id="vidProgressFill" class="progress-bar-fill"></div></div><div id="vidProgressText" class="progress-text">0%</div></div>`;
 
-                    // المسار الصحيح 100% المكتوب في التوثيق بتاعهم
                     const createEndpoint = "https://api.kie.ai/api/v1/jobs/createTask";
                     
-                    // شكل البيانات الدقيق زي التوثيق
+                    // الإصلاح السحري: تغليف الوصف داخل input حسب طلب السيرفر (Error 422)
                     const payload = { 
                         model: modelId, 
-                        prompt: promptText 
+                        input: {
+                            prompt: promptText 
+                        }
                     };
 
                     const startRes = await fetch(createEndpoint, {
@@ -314,7 +313,6 @@
                     
                     const startData = await startRes.json();
                     
-                    // استخراج الـ Task ID زي ما الصورة بتاعتك وضحت: data.taskId
                     const taskId = startData.data?.taskId || startData.taskId || startData.id;
                     
                     if(!taskId) {
@@ -325,7 +323,6 @@
                     let fakeProgress = 0;
                     const checkStatus = async () => {
                         try {
-                            // مسار الاستعلام عن المهمة
                             const statRes = await fetch(`https://api.kie.ai/api/v1/jobs/recordInfo?taskId=${taskId}`, {
                                 method: "GET",
                                 headers: { "Authorization": `Bearer ${KIE_API_KEY}` }
@@ -344,7 +341,6 @@
                             document.getElementById('vidProgressFill').style.width = `${currentProgress}%`;
                             document.getElementById('vidProgressText').innerText = `${currentProgress}%`;
 
-                            // إذا اكتملت المهمة (حسب نظام Kie: SUCCESS أو successFlag: 1)
                             if (taskData.status === "SUCCESS" || taskData.successFlag === 1 || taskData.url || taskData.imageUrl) {
                                 
                                 const finalUrl = taskData.url || taskData.imageUrl || taskData.videoUrl || (taskData.data && taskData.data.url);
@@ -354,7 +350,6 @@
                                     document.getElementById('vidProgressText').innerText = `100%`;
                                     
                                     setTimeout(() => {
-                                        // التفريق بين الصورة والفيديو بناءً على الامتداد
                                         if(modelId.includes('video') || finalUrl.toLowerCase().match(/\.(mp4|webm|mov)$/)) {
                                             output.innerHTML = `<video controls autoplay loop src="${finalUrl}"></video><br><div style="text-align:center; margin-top:10px;"><a href="${finalUrl}" target="_blank" class="btn-google" style="display:inline-flex; width:auto;"><i class="fa-solid fa-cloud-arrow-down" style="margin-right:5px;"></i> تحميل الفيديو</a></div>`;
                                         } else {
@@ -374,17 +369,14 @@
                             throw e;
                         }
                     };
-                    // بدء الكشف الأول بعد 4 ثواني
                     setTimeout(checkStatus, 4000);
                 }
 
             } catch (error) {
                 console.error("System Error:", error);
                 
-                // طباعة الخطأ بوضوح للمستخدم
                 output.innerHTML = `<div style="background:rgba(255,82,82,0.1); border: 1px solid #ff5252; padding:20px; border-radius:15px; color:#ff5252; text-align:center;"><i class="fa-solid fa-triangle-exclamation" style="font-size:40px; margin-bottom:10px;"></i><br><b style="font-size:20px;">عذراً، حدث خطأ:</b><br><span style="color:#e0e0e0; font-size:15px; direction: ltr; display: block; margin-top: 10px;">${error.message}</span></div>`;
                 
-                // استرجاع الكوينات بأمان في حالة حدوث أي خطأ
                 userPoints += cost;
                 await updateDoc(doc(db, "users", currentUser.uid), { points: userPoints });
                 document.getElementById('ptsSpan').innerText = userPoints;
